@@ -1,251 +1,280 @@
-import React, { useEffect, useState } from 'react';
-import { Animated, Image, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Image } from 'expo-image';
+import { SymbolView } from 'expo-symbols';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, Colors, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
 
-const TOTAL_TIME = 25 * 60;
+import { ThemedText } from '@/components/themed-text';
+import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+
+const stats = [
+  {
+    label: '오늘 집중',
+    value: '2시간 15분',
+    icon: { ios: 'clock', android: 'schedule', web: 'schedule' },
+  },
+  {
+    label: '연속 달성',
+    value: '5일',
+    icon: null,
+  },
+  {
+    label: '포인트',
+    value: '150',
+    icon: { ios: 'drop.fill', android: 'water_drop', web: 'water_drop' },
+  },
+] as const;
 
 export default function HomeScreen() {
-  const theme = useTheme();
-  const [seconds, setSeconds] = useState(TOTAL_TIME);
-  const [isRunning, setIsRunning] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [sproutAnim] = useState(() => new Animated.Value(0));
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | undefined;
-
-    if (isRunning && seconds > 0) {
-      interval = setInterval(() => {
-        setSeconds(prev => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isRunning, seconds]);
-
-  useEffect(() => {
-    Animated.timing(sproutAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start(() => setIsRunning(true));
-  }, [sproutAnim]);
-
-  const minutes = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  const progress = (seconds / TOTAL_TIME) * 100;
-
   return (
-    <ThemedView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <View style={[styles.avatar, { borderColor: theme.backgroundSelected }]}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.topBar}>
+              <View style={styles.profileRow}>
+                <Image
+                  source={{
+                    uri: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=160&h=160&fit=crop',
+                  }}
+                  style={styles.avatar}
+                  contentFit="cover"
+                />
+                <ThemedText style={styles.brandText}>포커스 숲</ThemedText>
+              </View>
+              <View style={styles.pointsBadge}>
+                <ThemedText style={styles.pointsText}>1,240</ThemedText>
+                <ThemedText style={styles.sparkleText}>✦</ThemedText>
+              </View>
+            </View>
+
+            <View style={styles.titleRow}>
+              <ThemedText style={styles.title}>오늘의{'\n'}정원</ThemedText>
+              <ThemedText style={styles.statusText}>성장{'\n'}진행 중</ThemedText>
+            </View>
+
+            <View style={styles.gardenCard}>
               <Image
                 source={{
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuApk3o_rV4JiDmzsenFPD7VHRN9izDjG0BaBP03qTCmoeB1Keel5cuI6mXbxaTq0TxYODsjNuLeBlphk3n3xuby0IlmAeTqg1013beR0GCC5BDbc-AONVCKXlAIIO7vcaFTSb_lD1CFvkpjII5LpXvamQM74-a-G1RY-5yOkd8PHFzcqsOOlrKfMP_2Ase43rx2AeLtSDrqOzu4DPNuzweu0ai-ohNebn44wtUttNyHScbvbtyzOIbgJapeAxRwtLMRzQgwzFNFVb4',
+                  uri: 'https://images.unsplash.com/photo-1459156212016-c812468e2115?w=900&h=900&fit=crop',
                 }}
-                style={styles.avatarImage}
+                style={styles.gardenImage}
+                contentFit="cover"
               />
+              <ThemedText style={styles.quote}>
+                “당신의 정원이{'\n'}평온하게 숨 쉬고 있어요.”
+              </ThemedText>
+              <View style={styles.oxygenRow}>
+                <View style={styles.oxygenDot} />
+                <ThemedText style={styles.oxygenText}>산소 농도 안정적</ThemedText>
+              </View>
             </View>
-            <ThemedText style={styles.headerTitle}>Focus Forest</ThemedText>
-          </View>
-          <View style={[styles.starBadge, { backgroundColor: theme.backgroundElement }]}>
-            <ThemedText style={styles.starText}>1,240</ThemedText>
-          </View>
-        </View>
 
-        <View style={styles.mainContent}>
-          <View style={styles.sproutZone}>
-            <Animated.View
-              style={[
-                styles.sproutContainer,
-                {
-                  opacity: sproutAnim,
-                  transform: [
-                    {
-                      scale: sproutAnim.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0.5, 1],
-                      }),
-                    },
-                  ],
-                },
-              ]}>
-              <Image
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDNuGV8cZqWzaUj3Zxf2M7DxilzKOi5yQ8ihN7XHT2BGCrqBRwJMw10LuNVenK3UYallXIvzxQEj0sfSmfjfxKPIGPhzWE8nqoUwPXc1Bb20UKnOC9rQEFMDr6WBR7a4qY3KVsVy7IHNemO95xRRTysBJ61dL5oUZh0drIBC1_Vuso22HYPl7Ia2Qj3sAzX0BsL_aSSIp4SBMEt0P-t6TqreThzhy-8zSZN3Ase0kpGThGZO8qO6gl16wum3yGBQ2Wd_rjWyXbvFBU',
-                }}
-                style={styles.sproutImage}
-              />
-            </Animated.View>
-          </View>
-
-          <View style={styles.messageSection}>
-            <ThemedText style={styles.focusMessage}>Focus now</ThemedText>
-            <ThemedText style={[styles.subMessage, { color: theme.textSecondary }]}>Your tree is growing.</ThemedText>
-          </View>
-
-          <View style={[styles.timerBox, { backgroundColor: theme.background }]}>
-            <ThemedText style={styles.timerText}>
-              {minutes}:{secs < 10 ? '0' : ''}
-              {secs}
-            </ThemedText>
-
-            <View style={[styles.progressContainer, { backgroundColor: theme.backgroundSelected }]}>
-              <Animated.View
-                style={[
-                  styles.progressBar,
-                  { backgroundColor: theme.text },
-                  { width: `${progress}%` },
-                ]}
-              />
+            <View style={styles.statsRow}>
+              {stats.map(item => (
+                <View key={item.value} style={styles.statCard}>
+                  <View style={styles.statIcon}>
+                    {item.icon ? (
+                      <SymbolView name={item.icon} tintColor="#2F6D78" size={24} />
+                    ) : (
+                      <ThemedText style={styles.streakGlyph}>🪴</ThemedText>
+                    )}
+                  </View>
+                  <ThemedText style={styles.statLabel}>{item.label}</ThemedText>
+                  <ThemedText style={styles.statValue}>{item.value}</ThemedText>
+                </View>
+              ))}
             </View>
+
+            <Pressable style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}>              
+              <ThemedText style={styles.ctaText}>집중 시작하기</ThemedText>
+            </Pressable>
           </View>
-
-          <ThemedText style={[styles.quote, { color: theme.textSecondary }]}>
-            Small habits build big change.
-          </ThemedText>
-        </View>
-
-        <View style={styles.footer}>
-          <Pressable style={styles.giveUpButton} onPress={() => setShowConfirmModal(true)}>
-            <ThemedText style={styles.giveUpLabel}>Give up</ThemedText>
-            <View style={[styles.giveUpIcon, { backgroundColor: theme.backgroundSelected }]}>
-              <ThemedText style={{ fontSize: 20 }}>T</ThemedText>
-            </View>
-          </Pressable>
-          <ThemedText style={[styles.wiltNote, { color: theme.textSecondary }]}>Stopping early may reset progress.</ThemedText>
-        </View>
+        </ScrollView>
       </SafeAreaView>
-
-      <Modal transparent visible={showConfirmModal} animationType="fade" onRequestClose={() => setShowConfirmModal(false)}>
-        <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
-          <View style={[styles.modalContent, { backgroundColor: theme.background }]}>
-            <ThemedText style={styles.modalEmoji}>!</ThemedText>
-            <ThemedText style={styles.modalTitle}>Stop this session?</ThemedText>
-            <ThemedText style={[styles.modalText, { color: theme.textSecondary }]}>If you stop now, this focus run ends.</ThemedText>
-
-            <Pressable style={[styles.modalButton, { backgroundColor: theme.text }]} onPress={() => setShowConfirmModal(false)}>
-              <ThemedText style={[styles.modalButtonText, { color: theme.background }]}>Keep focusing</ThemedText>
-            </Pressable>
-
-            <Pressable
-              style={styles.modalCancelButton}
-              onPress={() => {
-                setIsRunning(false);
-                setSeconds(TOTAL_TIME);
-                setShowConfirmModal(false);
-              }}>
-              <ThemedText style={[styles.modalCancelText, { color: '#DC2626' }]}>Yes, stop now</ThemedText>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  screen: {
+    backgroundColor: '#FFF8F3',
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    paddingBottom: BottomTabInset,
   },
-  header: {
+  scrollContent: {
+    alignItems: 'center',
+    paddingBottom: BottomTabInset + 88,
+    paddingHorizontal: Spacing.three,
+  },
+  content: {
+    maxWidth: MaxContentWidth,
+    paddingTop: Spacing.two,
+    width: '100%',
+  },
+  topBar: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: Spacing.two,
-    marginBottom: Spacing.three,
+    marginBottom: 26,
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
+  profileRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    overflow: 'hidden',
+    borderRadius: 22,
+    height: 44,
+    width: 44,
   },
-  avatarImage: { width: '100%', height: '100%' },
-  headerTitle: { fontSize: 24, fontWeight: '700' },
-  starBadge: { paddingHorizontal: Spacing.three, paddingVertical: Spacing.one, borderRadius: 20 },
-  starText: { fontSize: 16, fontWeight: '600' },
-  mainContent: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: Spacing.three },
-  sproutZone: { width: 280, height: 280, justifyContent: 'center', alignItems: 'center' },
-  sproutContainer: { width: 200, height: 200 },
-  sproutImage: { width: '100%', height: '100%', resizeMode: 'contain' },
-  messageSection: { alignItems: 'center', gap: Spacing.one },
-  focusMessage: { fontSize: 28, fontWeight: '700' },
-  subMessage: { fontSize: 16, opacity: 0.8 },
-  timerBox: {
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  brandText: {
+    color: '#8A6F62',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  pointsBadge: {
     alignItems: 'center',
-    gap: Spacing.three,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  timerText: { fontSize: 48, fontWeight: '700', fontFamily: 'monospace', letterSpacing: -1 },
-  progressContainer: { width: 200, height: 12, borderRadius: 6, overflow: 'hidden' },
-  progressBar: { height: '100%', borderRadius: 6 },
-  quote: {
-    fontSize: 14,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    marginHorizontal: Spacing.three,
-    marginTop: Spacing.three,
-    lineHeight: 20,
-  },
-  footer: { alignItems: 'center', gap: Spacing.two, paddingVertical: Spacing.three },
-  giveUpButton: { alignItems: 'center', gap: Spacing.one },
-  giveUpLabel: { fontSize: 12, fontWeight: '600', opacity: 0.4 },
-  giveUpIcon: {
-    width: 48,
-    height: 48,
+    backgroundColor: '#FFF3E9',
     borderRadius: 24,
+    flexDirection: 'row',
+    gap: 7,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+  },
+  pointsText: {
+    color: '#365C4B',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  sparkleText: {
+    color: '#F1A64F',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  titleRow: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  title: {
+    color: '#0E0B08',
+    fontSize: 29,
+    fontWeight: '900',
+    lineHeight: 34,
+  },
+  statusText: {
+    color: '#263F2E',
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 2,
+    lineHeight: 17,
+    marginBottom: 8,
+  },
+  gardenCard: {
+    alignItems: 'center',
+    backgroundColor: '#F7FAF8',
+    borderRadius: 34,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 20,
+  },
+  gardenImage: {
+    aspectRatio: 1,
+    marginBottom: 16,
+    width: '52%',
+  },
+  quote: {
+    color: '#0E0B08',
+    fontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: '500',
+    lineHeight: 25,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  oxygenRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  oxygenDot: {
+    backgroundColor: '#9BB8A5',
+    borderRadius: 4,
+    height: 8,
+    width: 8,
+  },
+  oxygenText: {
+    color: '#4F6F5D',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 20,
+  },
+  statCard: {
+    alignItems: 'center',
+    backgroundColor: '#FFF0E7',
+    borderRadius: 34,
+    flex: 1,
+    minHeight: 108,
+    paddingHorizontal: 10,
+    paddingTop: 14,
+  },
+  statIcon: {
+    alignItems: 'center',
+    backgroundColor: '#AEE1F0',
+    borderRadius: 17,
+    height: 34,
     justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: 6,
+    width: 34,
   },
-  wiltNote: { fontSize: 12, textAlign: 'center', opacity: 0.5 },
-  modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  modalContent: {
-    width: '80%',
-    maxWidth: 400,
-    borderRadius: Spacing.four,
-    padding: Spacing.four,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.light.backgroundSelected,
+  streakGlyph: {
+    fontSize: 18,
   },
-  modalEmoji: { fontSize: 40, marginBottom: Spacing.two },
-  modalTitle: { fontSize: 24, fontWeight: '700', marginBottom: Spacing.one },
-  modalText: { fontSize: 16, textAlign: 'center', marginBottom: Spacing.three, lineHeight: 22 },
-  modalButton: {
-    width: '100%',
-    paddingVertical: Spacing.three,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginBottom: Spacing.two,
+  statLabel: {
+    color: '#382B23',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 15,
+    textAlign: 'center',
   },
-  modalButtonText: { fontSize: 16, fontWeight: '600' },
-  modalCancelButton: { width: '100%', paddingVertical: Spacing.two, borderRadius: 20 },
-  modalCancelText: { fontSize: 16, textAlign: 'center', fontWeight: '500' },
+  statValue: {
+    color: '#0E0B08',
+    fontSize: 18,
+    fontWeight: '900',
+    lineHeight: 23,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  ctaButton: {
+    alignItems: 'center',
+    backgroundColor: '#2F6748',
+    borderRadius: 33,
+    flexDirection: 'row',
+    gap: 14,
+    justifyContent: 'center',
+    minHeight: 58,
+    paddingHorizontal: 18,
+  },
+  pressed: {
+    opacity: 0.8,
+  },
+  logoText: {
+    color: '#06150E',
+    fontSize: 21,
+    fontWeight: '300',
+    letterSpacing: 0,
+  },
+  ctaText: {
+    color: '#0A160F',
+    fontSize: 17,
+    fontWeight: '700',
+  },
 });

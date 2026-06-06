@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "focus-tree-native",
-    "slug": "focus-tree-native",
+    "name": "Detox Tree",
+    "slug": "detox-tree-widget",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -11,13 +11,17 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "permissions": [
+        "android.permission.PACKAGE_USAGE_STATS"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.focustreenative"
     },
     "web": {
       "output": "static",
@@ -34,7 +38,8 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,
