@@ -386,3 +386,20 @@ Web Bundled 41ms node_modules\expo-router\entry.js (1 module)
 Web Bundled 1490ms node_modules\expo-router\entry.js (1 module)
 Web Bundled 36ms node_modules\expo-router\entry.js (1 module)
  LOG  [web] Logs will appear in the browser console
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 88ms node_modules\expo\node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.warn (C:\olivia.hi\10.study\focus-tree-native\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\warnOnce\index.js:24:13)
+  createDOMProps (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\createDOMProps\index.js:805:13)
+  createElement (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\createElement\index.js:23:32)
+  segment (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\View\index.js:111:23)
+  Object.formTarget [as react_stack_bottom_frame] (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:15)
+  renderWithHooks (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:1897:21)
+  renderElement (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:2747:13)
+  retryNode (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:3043:26)
+  renderNodeDestructive (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:3020:26)
+Web Bundled 1722ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 41ms node_modules\expo-router\entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
