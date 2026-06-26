@@ -1,0 +1,37 @@
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.warn (C:\olivia.hi\10.study\focus-tree-native\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\warnOnce\index.js:24:13)
+  createDOMProps (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\createDOMProps\index.js:805:13)
+  createElement (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\createElement\index.js:23:32)
+  Component (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\View\index.js:111:23)
+  Object.callComponentInDEV [as react_stack_bottom_frame] (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:9808:18)
+  renderWithHooks (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:5062:19)
+  run (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6017:39)
+  retryNode (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6417:31)
+  renderNodeDestructive (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6367:11)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.warn (C:\olivia.hi\10.study\focus-tree-native\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\warnOnce\index.js:24:13)
+  createDOMProps (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\createDOMProps\index.js:805:13)
+  createElement (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\createElement\index.js:23:32)
+  Component (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\View\index.js:111:23)
+  Object.callComponentInDEV [as react_stack_bottom_frame] (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:9808:18)
+  renderWithHooks (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:5062:19)
+  run (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6017:39)
+  retryNode (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6417:31)
+  renderNodeDestructive (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6367:11)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.warn (C:\olivia.hi\10.study\focus-tree-native\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\warnOnce\index.js:24:13)
+  createDOMProps (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\modules\createDOMProps\index.js:805:13)
+  createElement (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\createElement\index.js:23:32)
+  Component (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-native-web\dist\exports\View\index.js:111:23)
+  Object.callComponentInDEV [as react_stack_bottom_frame] (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:9808:18)
+  renderWithHooks (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:5062:19)
+  run (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6017:39)
+  retryNode (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6417:31)
+  renderNodeDestructive (C:\olivia.hi\10.study\focus-tree-native\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6367:11)

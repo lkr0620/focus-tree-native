@@ -1,93 +1,219 @@
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { PanResponder, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { BottomTabInset, Spacing } from '@/constants/theme';
 
-const stats = [
+const seedOptions = [
   {
-    label: '오늘 집중',
-    value: '2시간 15분',
-    icon: { ios: 'clock', android: 'schedule', web: 'schedule' },
+    name: '삼나무',
+    uri: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=220&h=220&fit=crop',
+    selected: false,
   },
   {
-    label: '연속 달성',
-    value: '5일',
-    icon: null,
+    name: '단풍나무',
+    uri: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=220&h=220&fit=crop',
+    selected: true,
   },
   {
-    label: '포인트',
-    value: '150',
-    icon: { ios: 'drop.fill', android: 'water_drop', web: 'water_drop' },
+    name: '분재',
+    uri: 'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=220&h=220&fit=crop',
+    selected: false,
   },
 ] as const;
 
+const timeMarks = ['10m', '45m', '80m', '120m'] as const;
+const minMinutes = 10;
+const maxMinutes = 120;
+type SeedName = (typeof seedOptions)[number]['name'];
+
 export default function HomeScreen() {
+  const [selectedSeed, setSelectedSeed] = useState<SeedName>(
+    seedOptions.find(seed => seed.selected)?.name ?? seedOptions[0].name
+  );
+  const [selectedMinutes, setSelectedMinutes] = useState(25);
+  const [sliderWidth, setSliderWidth] = useState(1);
+  const [isBreathing, setIsBreathing] = useState(false);
+  const [remainingSeconds, setRemainingSeconds] = useState(25 * 60);
+
+  const selectedSeedOption = seedOptions.find(seed => seed.name === selectedSeed) ?? seedOptions[0];
+  const sliderProgress = (selectedMinutes - minMinutes) / (maxMinutes - minMinutes);
+  const progressDegrees = sliderProgress * 360;
+  const sessionDurationSeconds = selectedMinutes * 60;
+  const sessionProgress = Math.max(remainingSeconds / sessionDurationSeconds, 0);
+  const sessionProgressDegrees = sessionProgress * 360;
+  const remainingMinutes = Math.floor(remainingSeconds / 60);
+  const remainingDisplaySeconds = remainingSeconds % 60;
+  const remainingTimeText = `${remainingMinutes}:${String(remainingDisplaySeconds).padStart(2, '0')}`;
+  const sliderResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: event => {
+          const progress = Math.min(Math.max(event.nativeEvent.locationX / sliderWidth, 0), 1);
+          setSelectedMinutes(Math.round(minMinutes + progress * (maxMinutes - minMinutes)));
+        },
+        onPanResponderMove: event => {
+          const progress = Math.min(Math.max(event.nativeEvent.locationX / sliderWidth, 0), 1);
+          setSelectedMinutes(Math.round(minMinutes + progress * (maxMinutes - minMinutes)));
+        },
+      }),
+    [sliderWidth]
+  );
+
+  useEffect(() => {
+    if (!isBreathing) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setRemainingSeconds(current => {
+        if (current <= 1) {
+          clearInterval(timer);
+          setIsBreathing(false);
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isBreathing]);
+
   return (
     <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
-            <View style={styles.topBar}>
-              <View style={styles.profileRow}>
-                <Image
-                  source={{
-                    uri: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=160&h=160&fit=crop',
-                  }}
-                  style={styles.avatar}
-                  contentFit="cover"
-                />
-                <ThemedText style={styles.brandText}>포커스 숲</ThemedText>
-              </View>
-              <View style={styles.pointsBadge}>
-                <ThemedText style={styles.pointsText}>1,240</ThemedText>
-                <ThemedText style={styles.sparkleText}>✦</ThemedText>
-              </View>
+          <View style={[styles.header, isBreathing && styles.sessionHeader]}>
+            <View style={styles.logoRow}>
+              <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor="#4B6D51" size={28} />
+              <ThemedText style={styles.logoText}>Soom</ThemedText>
             </View>
-
-            <View style={styles.titleRow}>
-              <ThemedText style={styles.title}>오늘의{'\n'}정원</ThemedText>
-              <ThemedText style={styles.statusText}>성장{'\n'}진행 중</ThemedText>
-            </View>
-
-            <View style={styles.gardenCard}>
-              <Image
-                source={{
-                  uri: 'https://images.unsplash.com/photo-1459156212016-c812468e2115?w=900&h=900&fit=crop',
-                }}
-                style={styles.gardenImage}
-                contentFit="cover"
-              />
-              <ThemedText style={styles.quote}>
-                “당신의 정원이{'\n'}평온하게 숨 쉬고 있어요.”
-              </ThemedText>
-              <View style={styles.oxygenRow}>
-                <View style={styles.oxygenDot} />
-                <ThemedText style={styles.oxygenText}>산소 농도 안정적</ThemedText>
-              </View>
-            </View>
-
-            <View style={styles.statsRow}>
-              {stats.map(item => (
-                <View key={item.value} style={styles.statCard}>
-                  <View style={styles.statIcon}>
-                    {item.icon ? (
-                      <SymbolView name={item.icon} tintColor="#2F6D78" size={24} />
-                    ) : (
-                      <ThemedText style={styles.streakGlyph}>🪴</ThemedText>
-                    )}
-                  </View>
-                  <ThemedText style={styles.statLabel}>{item.label}</ThemedText>
-                  <ThemedText style={styles.statValue}>{item.value}</ThemedText>
-                </View>
-              ))}
-            </View>
-
-            <Pressable style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}>              
-              <ThemedText style={styles.ctaText}>집중 시작하기</ThemedText>
+            <Pressable style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}>
+              <SymbolView name={{ ios: 'person.circle', android: 'account_circle', web: 'account_circle' }} tintColor="#243126" size={24} />
             </Pressable>
+          </View>
+
+          <View style={styles.content}>
+            {isBreathing ? (
+              <View style={styles.sessionContent}>
+                <View style={styles.sessionTimerWrap}>
+                  <View style={styles.sessionTimeBadge}>
+                    <SymbolView name={{ ios: 'stopwatch', android: 'timer', web: 'timer' }} tintColor="#7E847B" size={16} />
+                    <ThemedText style={styles.sessionTimeText}>{remainingTimeText}</ThemedText>
+                  </View>
+
+                  <View style={styles.sessionCircleShadow}>
+                    <View style={styles.sessionCircle}>
+                      <View style={styles.sessionTrackRing} />
+                      <View
+                        style={[
+                          styles.sessionProgressRing,
+                          {
+                            backgroundImage: `conic-gradient(from 0deg, #9AB99F 0deg ${sessionProgressDegrees}deg, transparent ${sessionProgressDegrees}deg 360deg)`,
+                          } as object,
+                        ]}
+                      />
+                      <Image source={{ uri: selectedSeedOption.uri }} style={styles.sessionPlantImage} contentFit="cover" />
+                    </View>
+                  </View>
+                </View>
+
+                <ThemedText style={styles.sessionTitle}>지금 이 순간의 숨에 집중하세요.</ThemedText>
+
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => setIsBreathing(false)}
+                  style={({ pressed }) => [styles.pauseButton, pressed && styles.pressed]}>
+                  <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor="#4F554D" size={15} />
+                  <ThemedText style={styles.pauseText}>잠시 멈춤</ThemedText>
+                </Pressable>
+              </View>
+            ) : (
+              <>
+                <View style={styles.heroCopy}>
+                  <ThemedText style={styles.title}>멈추고, 비우고, 나의 숨을 틔우다</ThemedText>
+                  <ThemedText style={styles.subtitle}>잠시 멈춰, 당신의 숨을 고르세요.</ThemedText>
+                </View>
+
+                <View style={styles.timerWrap}>
+                  <View style={styles.timerShadow}>
+                    <View style={styles.timerCircle}>
+                      <View style={styles.timerTrackRing} />
+                      <View
+                        style={[
+                          styles.timerProgressRing,
+                          {
+                            backgroundImage: `conic-gradient(from 0deg, #4B6D51 0deg ${progressDegrees}deg, transparent ${progressDegrees}deg 360deg)`,
+                          } as object,
+                        ]}
+                      />
+                      <View style={styles.timerInnerDisk}>
+                        <ThemedText style={styles.timerValue}>{selectedMinutes}</ThemedText>
+                        <ThemedText style={styles.timerUnit}>분</ThemedText>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.sliderBlock}>
+                  <View
+                    accessibilityRole="adjustable"
+                    accessibilityValue={{ min: minMinutes, max: maxMinutes, now: selectedMinutes }}
+                    onLayout={event => setSliderWidth(event.nativeEvent.layout.width)}
+                    style={styles.sliderTouchArea}
+                    {...sliderResponder.panHandlers}>
+                    <View style={styles.sliderTrack}>
+                      <View style={[styles.sliderFill, { width: `${sliderProgress * 100}%` }]} />
+                      <View style={[styles.sliderKnob, { left: `${sliderProgress * 100}%` }]} />
+                    </View>
+                  </View>
+                  <View style={styles.timeRow}>
+                    {timeMarks.map(mark => (
+                      <ThemedText key={mark} style={styles.timeMark}>
+                        {mark}
+                      </ThemedText>
+                    ))}
+                  </View>
+                </View>
+
+                <ThemedText style={styles.sectionTitle}>심을 씨앗을 고르세요</ThemedText>
+
+                <View style={styles.seedRow}>
+                  {seedOptions.map(seed => {
+                    const isSelected = selectedSeed === seed.name;
+
+                    return (
+                      <Pressable
+                        key={seed.name}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: isSelected }}
+                        onPress={() => setSelectedSeed(seed.name)}
+                        style={({ pressed }) => [styles.seedCard, isSelected && styles.seedCardSelected, pressed && styles.pressed]}>
+                        <Image source={{ uri: seed.uri }} style={styles.seedImage} contentFit="cover" />
+                        <ThemedText style={styles.seedName}>{seed.name}</ThemedText>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => {
+                    setRemainingSeconds(selectedMinutes * 60);
+                    setIsBreathing(true);
+                  }}
+                  style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}>
+                  <ThemedText style={styles.ctaText}>숨 고르기 시작</ThemedText>
+                  <SymbolView name={{ ios: 'wind', android: 'air', web: 'air' }} tintColor="#FFFFFF" size={25} />
+                </Pressable>
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -97,7 +223,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FFF8F3',
+    backgroundColor: '#FAFBF7',
     flex: 1,
   },
   safeArea: {
@@ -105,176 +231,302 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: 'center',
-    paddingBottom: BottomTabInset + 88,
-    paddingHorizontal: Spacing.three,
-  },
-  content: {
-    maxWidth: MaxContentWidth,
-    paddingTop: Spacing.two,
+    paddingBottom: BottomTabInset + 108,
     width: '100%',
   },
-  topBar: {
+  content: {
+    maxWidth: 430,
+    paddingHorizontal: Spacing.three,
+    width: '100%',
+  },
+  header: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 26,
+    marginBottom: 28,
+    paddingHorizontal: Spacing.three,
+    paddingTop: 24,
+    width: '100%',
   },
-  profileRow: {
+  sessionHeader: {
+    marginBottom: 54,
+  },
+  logoRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
   },
-  avatar: {
-    borderRadius: 22,
-    height: 44,
-    width: 44,
+  logoText: {
+    color: '#4B6D51',
+    fontSize: 22,
+    fontWeight: '900',
+    letterSpacing: 3,
   },
-  brandText: {
-    color: '#8A6F62',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  pointsBadge: {
+  profileButton: {
     alignItems: 'center',
-    backgroundColor: '#FFF3E9',
-    borderRadius: 24,
-    flexDirection: 'row',
-    gap: 7,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
   },
-  pointsText: {
-    color: '#365C4B',
-    fontSize: 18,
-    fontWeight: '900',
-  },
-  sparkleText: {
-    color: '#F1A64F',
-    fontSize: 18,
-    fontWeight: '900',
-  },
-  titleRow: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  heroCopy: {
+    alignItems: 'center',
+    marginBottom: 34,
   },
   title: {
-    color: '#0E0B08',
-    fontSize: 29,
-    fontWeight: '900',
-    lineHeight: 34,
+    color: '#20221F',
+    fontSize: 27,
+    fontWeight: '600',
+    lineHeight: 36,
+    maxWidth: 340,
+    textAlign: 'center',
   },
-  statusText: {
-    color: '#263F2E',
-    fontSize: 13,
-    fontWeight: '900',
-    letterSpacing: 2,
-    lineHeight: 17,
-    marginBottom: 8,
-  },
-  gardenCard: {
-    alignItems: 'center',
-    backgroundColor: '#F7FAF8',
-    borderRadius: 34,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 20,
-  },
-  gardenImage: {
-    aspectRatio: 1,
-    marginBottom: 16,
-    width: '52%',
-  },
-  quote: {
-    color: '#0E0B08',
-    fontSize: 18,
+  subtitle: {
+    color: '#4D514C',
+    fontSize: 16,
     fontStyle: 'italic',
     fontWeight: '500',
-    lineHeight: 25,
-    marginBottom: 10,
+    lineHeight: 22,
+    marginTop: 17,
     textAlign: 'center',
   },
-  oxygenRow: {
+  sessionContent: {
+    alignItems: 'center',
+  },
+  sessionTimerWrap: {
+    alignItems: 'center',
+    marginBottom: 70,
+  },
+  sessionTimeBadge: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: 5,
+    marginBottom: 10,
+    zIndex: 2,
   },
-  oxygenDot: {
-    backgroundColor: '#9BB8A5',
-    borderRadius: 4,
-    height: 8,
-    width: 8,
+  sessionTimeText: {
+    color: '#7E847B',
+    fontSize: 17,
+    fontWeight: '900',
   },
-  oxygenText: {
-    color: '#4F6F5D',
-    fontSize: 13,
+  sessionCircleShadow: {
+    borderRadius: 143,
+    shadowColor: '#8E9C90',
+    shadowOffset: { width: 0, height: 18 },
+    shadowOpacity: 0.22,
+    shadowRadius: 26,
+  },
+  sessionCircle: {
+    alignItems: 'center',
+    backgroundColor: '#FDFEFC',
+    borderRadius: 143,
+    height: 286,
+    justifyContent: 'center',
+    overflow: 'hidden',
+    width: 286,
+  },
+  sessionTrackRing: {
+    borderColor: '#DFE5DE',
+    borderRadius: 143,
+    borderWidth: 5,
+    height: 286,
+    position: 'absolute',
+    width: 286,
+  },
+  sessionProgressRing: {
+    borderRadius: 143,
+    height: 286,
+    position: 'absolute',
+    width: 286,
+  },
+  sessionPlantImage: {
+    borderRadius: 132,
+    height: 264,
+    width: 264,
+  },
+  sessionTitle: {
+    color: '#394238',
+    fontSize: 25,
+    fontWeight: '800',
+    lineHeight: 34,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  pauseButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E7E9E4',
+    borderRadius: 999,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 7,
+    minHeight: 44,
+    paddingHorizontal: 28,
+  },
+  pauseText: {
+    color: '#4F554D',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  timerWrap: {
+    alignItems: 'center',
+    marginBottom: 46,
+  },
+  timerShadow: {
+    borderRadius: 126,
+    shadowColor: '#9AA99D',
+    shadowOffset: { width: 0, height: 19 },
+    shadowOpacity: 0.2,
+    shadowRadius: 27,
+  },
+  timerCircle: {
+    alignItems: 'center',
+    backgroundColor: '#FDFEFC',
+    borderRadius: 120,
+    height: 240,
+    justifyContent: 'center',
+    overflow: 'hidden',
+    width: 240,
+  },
+  timerTrackRing: {
+    borderColor: '#E5E7E1',
+    borderRadius: 120,
+    borderWidth: 5,
+    height: 240,
+    position: 'absolute',
+    width: 240,
+  },
+  timerProgressRing: {
+    borderRadius: 120,
+    height: 240,
+    position: 'absolute',
+    width: 240,
+  },
+  timerInnerDisk: {
+    alignItems: 'center',
+    backgroundColor: '#FDFEFC',
+    borderRadius: 112,
+    height: 224,
+    justifyContent: 'center',
+    width: 224,
+  },
+  timerValue: {
+    color: '#4B6D51',
+    fontSize: 43,
+    fontWeight: '300',
+    lineHeight: 50,
+  },
+  timerUnit: {
+    color: '#20221F',
+    fontSize: 15,
     fontWeight: '700',
   },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 20,
+  sliderBlock: {
+    marginBottom: 36,
   },
-  statCard: {
-    alignItems: 'center',
-    backgroundColor: '#FFF0E7',
-    borderRadius: 34,
-    flex: 1,
-    minHeight: 108,
-    paddingHorizontal: 10,
-    paddingTop: 14,
-  },
-  statIcon: {
-    alignItems: 'center',
-    backgroundColor: '#AEE1F0',
-    borderRadius: 17,
+  sliderTouchArea: {
     height: 34,
     justifyContent: 'center',
-    marginBottom: 6,
-    width: 34,
+    marginHorizontal: 10,
   },
-  streakGlyph: {
-    fontSize: 18,
+  sliderTrack: {
+    backgroundColor: '#ECEEE8',
+    borderRadius: 999,
+    height: 8,
+    justifyContent: 'center',
+    overflow: 'visible',
   },
-  statLabel: {
-    color: '#382B23',
-    fontSize: 12,
-    fontWeight: '700',
-    lineHeight: 15,
-    textAlign: 'center',
+  sliderFill: {
+    backgroundColor: '#4B6D51',
+    borderRadius: 999,
+    height: 8,
+    left: 0,
+    position: 'absolute',
   },
-  statValue: {
-    color: '#0E0B08',
-    fontSize: 18,
+  sliderKnob: {
+    backgroundColor: '#4B6D51',
+    borderColor: '#FFFFFF',
+    borderRadius: 13,
+    borderWidth: 4,
+    height: 26,
+    position: 'absolute',
+    transform: [{ translateX: -13 }],
+    width: 26,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 19,
+  },
+  timeMark: {
+    color: '#7D847D',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  sectionTitle: {
+    color: '#777B72',
+    fontSize: 15,
     fontWeight: '900',
-    lineHeight: 23,
-    marginTop: 4,
+    marginBottom: 21,
     textAlign: 'center',
   },
-  ctaButton: {
-    alignItems: 'center',
-    backgroundColor: '#2F6748',
-    borderRadius: 33,
+  seedRow: {
     flexDirection: 'row',
     gap: 14,
     justifyContent: 'center',
-    minHeight: 58,
-    paddingHorizontal: 18,
+    marginBottom: 43,
   },
-  pressed: {
-    opacity: 0.8,
+  seedCard: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: 'transparent',
+    borderRadius: 11,
+    borderWidth: 2,
+    flex: 1,
+    maxWidth: 98,
+    minHeight: 124,
+    paddingHorizontal: 10,
+    paddingTop: 18,
+    shadowColor: '#65705F',
+    shadowOffset: { width: 0, height: 9 },
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
   },
-  logoText: {
-    color: '#06150E',
-    fontSize: 21,
-    fontWeight: '300',
-    letterSpacing: 0,
+  seedCardSelected: {
+    borderColor: '#4B6D51',
+    shadowOpacity: 0.14,
+  },
+  seedImage: {
+    borderRadius: 28,
+    height: 56,
+    marginBottom: 14,
+    width: 56,
+  },
+  seedName: {
+    color: '#20221F',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  ctaButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#4B6D51',
+    borderRadius: 31,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 60,
+    shadowColor: '#4B6D51',
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    width: '92%',
   },
   ctaText: {
-    color: '#0A160F',
-    fontSize: 17,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontSize: 23,
+    fontWeight: '900',
+  },
+  pressed: {
+    opacity: 0.82,
   },
 });

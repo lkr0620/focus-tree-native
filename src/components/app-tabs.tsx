@@ -1,25 +1,74 @@
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { StyleSheet, View } from 'react-native';
+import type { ComponentProps } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from './themed-text';
 
-type TabIconProps = {
-  focused: boolean;
-  color: string;
-  icon: {
-    ios: 'house' | 'tree.fill' | 'gearshape';
-    android: 'home' | 'forest' | 'settings';
-    web: 'home' | 'park' | 'settings';
-  };
+type TabConfig = {
   label: string;
+  icon: ComponentProps<typeof SymbolView>['name'];
 };
 
-function TabIcon({ focused, color, icon, label }: TabIconProps) {
+const tabs: Record<string, TabConfig> = {
+  index: {
+    label: '홈',
+    icon: { ios: 'house.fill', android: 'home', web: 'home' },
+  },
+  explore: {
+    label: '내 숲',
+    icon: { ios: 'tree.fill', android: 'forest', web: 'park' },
+  },
+  stats: {
+    label: '통계',
+    icon: { ios: 'chart.bar.fill', android: 'bar_chart', web: 'bar_chart' },
+  },
+  settings: {
+    label: '설정',
+    icon: { ios: 'gearshape.fill', android: 'settings', web: 'settings' },
+  },
+};
+
+function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   return (
-    <View style={[styles.iconWrap, focused && styles.activeIconWrap]}>
-      <SymbolView name={icon} tintColor={color} size={23} />
-      <ThemedText style={[styles.iconLabel, focused && styles.activeIconLabel]}>{label}</ThemedText>
+    <View style={styles.tabBar}>
+      <View style={styles.tabRow}>
+        {state.routes.map((route, index) => {
+          const focused = state.index === index;
+          const tab = tabs[route.name];
+
+          if (!tab) {
+            return null;
+          }
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!focused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
+
+          return (
+            <Pressable
+              key={route.key}
+              accessibilityRole="button"
+              accessibilityState={focused ? { selected: true } : undefined}
+              onPress={onPress}
+              style={styles.tabSlot}>
+              <View style={[styles.tabButton, focused && styles.activeTabButton]}>
+                <SymbolView name={tab.icon} tintColor={focused ? '#FFFFFF' : '#747B73'} size={22} />
+                <ThemedText style={[styles.tabLabel, focused && styles.activeTabLabel]}>{tab.label}</ThemedText>
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -27,93 +76,63 @@ function TabIcon({ focused, color, icon, label }: TabIconProps) {
 export default function AppTabs() {
   return (
     <Tabs
+      tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: '#2F6D4E',
-        tabBarInactiveTintColor: '#1F2937',
-        tabBarStyle: styles.tabBar,
-        tabBarItemStyle: styles.tabBarItem,
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: '홈',
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon focused={focused} color={color} label="홈" icon={{ ios: 'house', android: 'home', web: 'home' }} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: '숲',
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              focused={focused}
-              color={color}
-              label="숲"
-              icon={{ ios: 'tree.fill', android: 'forest', web: 'park' }}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: '설정',
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              focused={focused}
-              color={color}
-              label="설정"
-              icon={{ ios: 'gearshape', android: 'settings', web: 'settings' }}
-            />
-          ),
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: '홈' }} />
+      <Tabs.Screen name="explore" options={{ title: '내 숲' }} />
+      <Tabs.Screen name="stats" options={{ title: '통계' }} />
+      <Tabs.Screen name="settings" options={{ title: '설정' }} />
     </Tabs>
   );
 }
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#FFF0E3',
-    borderTopWidth: 0,
-    borderRadius: 28,
-    bottom: 14,
-    elevation: 0,
-    height: 76,
-    left: 18,
-    paddingBottom: 8,
-    paddingTop: 8,
+    backgroundColor: '#FFFFFF',
+    borderTopColor: '#EEF0EA',
+    borderTopWidth: 1,
+    bottom: 0,
+    height: 86,
+    left: 0,
+    paddingHorizontal: 24,
     position: 'absolute',
-    right: 18,
-    shadowOpacity: 0,
+    right: 0,
+    shadowColor: '#C8CEC2',
+    shadowOffset: { width: 0, height: -8 },
+    shadowOpacity: 0.16,
+    shadowRadius: 20,
   },
-  tabBarItem: {
-    borderRadius: 28,
-    height: 60,
-  },
-  iconWrap: {
+  tabRow: {
     alignItems: 'center',
-    borderRadius: 28,
-    gap: 4,
+    flexDirection: 'row',
+    height: '100%',
+    justifyContent: 'space-between',
+  },
+  tabSlot: {
+    alignItems: 'center',
+    height: 66,
+    justifyContent: 'center',
+    width: 62,
+  },
+  tabButton: {
+    alignItems: 'center',
+    borderRadius: 999,
+    gap: 3,
     height: 60,
     justifyContent: 'center',
-    minWidth: 74,
-    paddingHorizontal: 14,
+    width: 60,
   },
-  activeIconWrap: {
-    backgroundColor: '#9ED7B8',
-    minWidth: 98,
+  activeTabButton: {
+    backgroundColor: '#AFA697',
   },
-  iconLabel: {
-    color: '#1F2937',
+  tabLabel: {
+    color: '#6F776F',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '900',
   },
-  activeIconLabel: {
-    color: '#2F6D4E',
+  activeTabLabel: {
+    color: '#FFFFFF',
   },
 });
