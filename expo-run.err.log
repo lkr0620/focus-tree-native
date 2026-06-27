@@ -340,3 +340,356 @@
   renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6808:14)
   retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7140:58)
   renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7116:7)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:8:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:124:22)
+  Object.keyOrIndex [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:858:19)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6234:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7122:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7504:42)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7459:36)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:8:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:124:22)
+  Object.keyOrIndex [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:858:19)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6234:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7122:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7504:42)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7459:36)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:8:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:124:22)
+  Object.keyOrIndex [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:858:19)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6234:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7122:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7504:42)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7459:36)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:8:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:124:22)
+  Object.keyOrIndex [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:858:19)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6234:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7122:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7504:42)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7459:36)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  externalRuntimeConfig (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.parentHoistableState [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:914:22)
+  headers (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6241:17)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7129:37)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7534:22)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7484:20)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  createFormatContext (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1121:14)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6512:7)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7326:14)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7724:15)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7691:12)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  createFormatContext (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1121:14)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6512:7)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7326:14)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7724:15)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7691:12)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.switchContext [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1505:14)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6896:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7707:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8099:46)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8068:57)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.switchContext [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1505:14)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6896:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7707:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8099:46)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8068:57)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.switchContext [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1505:14)
+  renderWithHooks (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6896:15)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7707:36)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8099:46)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8068:57)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1523:11)
+  clientRenderedSuspenseBoundaryError2 (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6904:13)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7739:28)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8107:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8081:52)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1540:14)
+  byteSize (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6924:22)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7779:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8121:49)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8092:78)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.abortRemainingReplayNodes [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1594:13)
+  destination (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6967:14)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7872:12)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8180:13)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8153:74)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.abortRemainingReplayNodes [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1594:13)
+  destination (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6967:14)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7872:12)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8180:13)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8153:74)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.abortRemainingReplayNodes [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1594:13)
+  destination (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6967:14)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7872:12)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8180:13)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8153:74)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.abortRemainingReplayNodes [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1594:13)
+  destination (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6967:14)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7872:12)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8180:13)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8153:74)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.abortRemainingReplayNodes [as react_stack_bottom_frame] (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1594:13)
+  destination (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6967:14)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7872:12)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8180:13)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8153:74)
+"shadow*" style props are deprecated. Use "boxShadow".
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1598:18)
+  completeBoundaryScriptEnd (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6977:21)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7875:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8181:43)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8154:56)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1598:18)
+  completeBoundaryScriptEnd (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6977:21)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7875:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8181:43)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8154:56)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1598:18)
+  completeBoundaryScriptEnd (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6977:21)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7875:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8181:43)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8154:56)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1598:18)
+  completeBoundaryScriptEnd (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6977:21)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7875:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8181:43)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8154:56)
+"shadow*" style props are deprecated. Use "boxShadow".
+λ  WARN  props.pointerEvents is deprecated. Use style.pointerEvents 
+  console.logWithStack [as warn] (C:\olivia.hi\10.study\soom-app\node_modules\expo\node_modules\@expo\cli\src\start\server\serverLogLikeMetro.ts:177:21)
+  warnOnce (C:\olivia.hi\10.study\soom-app\node_modules\styleq\dist\styleq.js:15:13)
+  createDOMProps (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\modules\createDOMProps\index.js:825:1)
+  View (C:\olivia.hi\10.study\soom-app\node_modules\react-native-web\dist\exports\View\index.js:131:15)
+  Object.react_stack_bottom_frame (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server.node.development.js:1598:18)
+  completeBoundaryScriptEnd (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:6977:21)
+  renderElement (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:7875:35)
+  retryNode (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8181:43)
+  renderNodeDestructive (C:\olivia.hi\10.study\soom-app\node_modules\react-dom\cjs\react-dom-server-legacy.node.development.js:8154:56)
+"shadow*" style props are deprecated. Use "boxShadow".
