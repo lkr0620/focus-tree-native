@@ -1,110 +1,449 @@
+import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppHeader } from '@/components/app-header';
+import { useAuth } from '@/components/auth-context';
+import { usePreferences, type AppLanguage } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 
-const settings = [
+const focusSettings = [
   {
-    title: '집중 알림',
-    body: '예약한 집중 시간이 가까워지면 부드럽게 알려줘요.',
-    enabled: true,
-    icon: { ios: 'bell.fill', android: 'notifications', web: 'notifications' },
+    id: 'appLimit',
+    title: '앱 제한 관리',
+    icon: { ios: 'timer', android: 'timer_off', web: 'timer_off' },
+    accessory: 'chevron',
   },
   {
-    title: '연속 성공 배지',
-    body: '매일의 기록과 보상 배지를 홈 화면에 표시해요.',
-    enabled: true,
-    icon: { ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' },
+    id: 'doNotDisturb',
+    title: '방해 금지 모드',
+    icon: { ios: 'minus.circle', android: 'do_not_disturb_on', web: 'do_not_disturb_on' },
+    accessory: 'switchOn',
   },
   {
-    title: '나무 학습 카드',
-    body: '수집한 나무의 사진, 계절, 짧은 이야기를 보여줘요.',
-    enabled: true,
-    icon: { ios: 'book.fill', android: 'menu_book', web: 'menu_book' },
+    id: 'dailyGoal',
+    title: '일일 목표 설정',
+    value: '60분',
+    icon: { ios: 'flag', android: 'outlined_flag', web: 'outlined_flag' },
+    accessory: 'chevron',
   },
 ] as const;
 
-const goalOptions = [
-  { label: '오늘 목표', value: '3시간' },
-  { label: '휴식 간격', value: '25분' },
-  { label: '방해 앱', value: '7개' },
+const appSettings = [
+  {
+    id: 'notifications',
+    title: '알림 설정',
+    icon: { ios: 'bell', android: 'notifications', web: 'notifications' },
+    accessory: 'chevron',
+  },
+  {
+    id: 'darkMode',
+    title: '다크 모드',
+    icon: { ios: 'moon', android: 'dark_mode', web: 'dark_mode' },
+    accessory: 'switchOff',
+  },
+  {
+    id: 'language',
+    title: '언어 선택',
+    value: '한국어',
+    icon: { ios: 'globe', android: 'language', web: 'language' },
+    accessory: 'chevron',
+  },
 ] as const;
+
+const generalSettings = [
+  {
+    id: 'about',
+    title: '숨(Soom) 정보',
+    icon: { ios: 'info.circle', android: 'info', web: 'info' },
+    accessory: 'chevron',
+  },
+  {
+    id: 'version',
+    title: '버전 정보',
+    value: 'v1.2.0',
+    icon: { ios: 'iphone', android: 'system_update_alt', web: 'system_update_alt' },
+    accessory: 'value',
+  },
+] as const;
+
+type SettingItem = (typeof focusSettings)[number] | (typeof appSettings)[number] | (typeof generalSettings)[number];
+type ValueOverrides = Record<string, string>;
+
+const dailyGoalOptions = ['30분', '60분', '90분', '120분'] as const;
+const appLimitOptions = ['5개 앱', '7개 앱', '10개 앱', '모든 방해 앱'] as const;
+const dailyGoalOptionsEn = ['30 min', '60 min', '90 min', '120 min'] as const;
+const appLimitOptionsEn = ['5 apps', '7 apps', '10 apps', 'All distracting apps'] as const;
+
+const copy = {
+  ko: {
+    appLimit: '앱 제한 관리',
+    appLimitChanged: '앱 제한 범위가 {value}으로 변경되었습니다.',
+    appSettings: '앱 설정',
+    about: '숨(Soom) 정보',
+    aboutMessage: 'Soom은 잠깐의 멈춤과 집중 기록을 돕는 호흡 루틴 앱입니다.',
+    dailyGoal: '일일 목표 설정',
+    dailyGoalChanged: '일일 목표가 {value}으로 변경되었습니다.',
+    darkMode: '다크 모드',
+    darkModeOff: '다크 모드가 꺼졌습니다.',
+    darkModeOn: '다크 모드가 켜졌습니다.',
+    doNotDisturb: '방해 금지 모드',
+    doNotDisturbOff: '방해 금지 모드가 꺼졌습니다.',
+    doNotDisturbOn: '방해 금지 모드가 켜졌습니다.',
+    focusSettings: '집중 설정',
+    footer: 'CRAFTED FOR INNER PEACE',
+    general: '일반',
+    language: '언어 선택',
+    languageChanged: '언어가 한국어로 변경되었습니다.',
+    login: '로그인하기',
+    logout: '로그아웃',
+    notifications: '알림 설정',
+    notificationsOff: '알림이 꺼졌습니다.',
+    notificationsOn: '알림이 켜졌습니다.',
+    off: '꺼짐',
+    on: '켜짐',
+    profileDefaultLevel: 'lv.12 숲의 수호자',
+    profileDefaultName: '숨 쉬는 나',
+    profileMessage: '{name}님의 계정 정보가 연결되어 있습니다.',
+    statusDefault: '설정을 선택하면 바로 반영됩니다.',
+    version: '버전 정보',
+    versionMessage: '현재 버전은 v1.2.0입니다.',
+  },
+  en: {
+    appLimit: 'App Limits',
+    appLimitChanged: 'App limit scope changed to {value}.',
+    appSettings: 'App Settings',
+    about: 'About Soom',
+    aboutMessage: 'Soom helps you build breathing routines through short pauses and focus records.',
+    dailyGoal: 'Daily Goal',
+    dailyGoalChanged: 'Daily goal changed to {value}.',
+    darkMode: 'Dark Mode',
+    darkModeOff: 'Dark mode is off.',
+    darkModeOn: 'Dark mode is on.',
+    doNotDisturb: 'Do Not Disturb',
+    doNotDisturbOff: 'Do Not Disturb is off.',
+    doNotDisturbOn: 'Do Not Disturb is on.',
+    focusSettings: 'Focus Settings',
+    footer: 'CRAFTED FOR INNER PEACE',
+    general: 'General',
+    language: 'Language',
+    languageChanged: 'Language changed to English.',
+    login: 'Log In',
+    logout: 'Log Out',
+    notifications: 'Notifications',
+    notificationsOff: 'Notifications are off.',
+    notificationsOn: 'Notifications are on.',
+    off: 'Off',
+    on: 'On',
+    profileDefaultLevel: 'lv.12 Forest Guardian',
+    profileDefaultName: 'Breathing Me',
+    profileMessage: "{name}'s account is connected.",
+    statusDefault: 'Choose a setting to apply it right away.',
+    version: 'Version',
+    versionMessage: 'Current version is v1.2.0.',
+  },
+} as const;
+
+function formatMessage(template: string, value: string) {
+  return template.replace('{value}', value).replace('{name}', value);
+}
+
+function Accessory({
+  doNotDisturb,
+  item,
+  darkMode,
+  onToggleDarkMode,
+  onToggleDoNotDisturb,
+  valueOverrides,
+}: {
+  doNotDisturb: boolean;
+  item: SettingItem;
+  darkMode: boolean;
+  onToggleDarkMode: () => void;
+  onToggleDoNotDisturb: () => void;
+  valueOverrides: ValueOverrides;
+}) {
+  if (item.accessory === 'switchOn' || item.accessory === 'switchOff') {
+    const isDarkMode = item.title === '다크 모드';
+
+    return (
+      <Switch
+        ios_backgroundColor="#E4E7E1"
+        onValueChange={isDarkMode ? onToggleDarkMode : onToggleDoNotDisturb}
+        thumbColor="#FFFFFF"
+        trackColor={{ false: '#E4E7E1', true: '#C9D8C9' }}
+        value={isDarkMode ? darkMode : doNotDisturb}
+      />
+    );
+  }
+
+  const displayValue = valueOverrides[item.title] ?? ('value' in item ? item.value : '');
+
+  return (
+    <View style={styles.accessoryRow}>
+      {displayValue ? <ThemedText style={styles.valueText}>{displayValue}</ThemedText> : null}
+      {item.accessory === 'chevron' ? (
+        <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor="#B5BDB3" size={20} />
+      ) : null}
+    </View>
+  );
+}
+
+function SettingRow({
+  doNotDisturb,
+  item,
+  darkMode,
+  isLast,
+  onItemPress,
+  onToggleDarkMode,
+  onToggleDoNotDisturb,
+  valueOverrides,
+}: {
+  doNotDisturb: boolean;
+  item: SettingItem;
+  darkMode: boolean;
+  isLast: boolean;
+  onItemPress: (item: SettingItem) => void;
+  onToggleDarkMode: () => void;
+  onToggleDoNotDisturb: () => void;
+  valueOverrides: ValueOverrides;
+}) {
+  return (
+    <Pressable onPress={() => onItemPress(item)} style={({ pressed }) => [styles.settingRow, isLast && styles.lastRow, pressed && styles.pressed]}>
+      <SymbolView name={item.icon} tintColor="#4B6D51" size={22} />
+      <ThemedText style={styles.settingTitle}>{valueOverrides[`${item.id}:title`] ?? item.title}</ThemedText>
+      <Accessory
+        darkMode={darkMode}
+        doNotDisturb={doNotDisturb}
+        item={item}
+        onToggleDarkMode={onToggleDarkMode}
+        onToggleDoNotDisturb={onToggleDoNotDisturb}
+        valueOverrides={valueOverrides}
+      />
+    </Pressable>
+  );
+}
+
+function SettingSection({
+  doNotDisturb,
+  items,
+  darkMode,
+  onItemPress,
+  onToggleDarkMode,
+  onToggleDoNotDisturb,
+  title,
+  valueOverrides,
+}: {
+  doNotDisturb: boolean;
+  items: readonly SettingItem[];
+  darkMode: boolean;
+  onItemPress: (item: SettingItem) => void;
+  onToggleDarkMode: () => void;
+  onToggleDoNotDisturb: () => void;
+  title: string;
+  valueOverrides: ValueOverrides;
+}) {
+  return (
+    <View style={styles.section}>
+      <ThemedText style={styles.sectionTitle}>{title}</ThemedText>
+      <View style={styles.sectionCard}>
+        {items.map((item, index) => (
+          <SettingRow
+            darkMode={darkMode}
+            doNotDisturb={doNotDisturb}
+            isLast={index === items.length - 1}
+            item={item}
+            key={item.title}
+            onItemPress={onItemPress}
+            onToggleDarkMode={onToggleDarkMode}
+            onToggleDoNotDisturb={onToggleDoNotDisturb}
+            valueOverrides={valueOverrides}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
 
 export default function SettingsScreen() {
+  const { logout, user } = useAuth();
+  const { language, setLanguage } = usePreferences();
+  const [appLimitIndex, setAppLimitIndex] = useState(1);
+  const [dailyGoalIndex, setDailyGoalIndex] = useState(1);
+  const [darkMode, setDarkMode] = useState(false);
+  const [doNotDisturb, setDoNotDisturb] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [statusMessage, setStatusMessage] = useState('');
+  const text = copy[language];
+  const localizedDailyGoals = language === 'ko' ? dailyGoalOptions : dailyGoalOptionsEn;
+  const localizedAppLimits = language === 'ko' ? appLimitOptions : appLimitOptionsEn;
+
+  const valueOverrides = {
+    'appLimit:title': text.appLimit,
+    'doNotDisturb:title': text.doNotDisturb,
+    'dailyGoal:title': text.dailyGoal,
+    'notifications:title': text.notifications,
+    'darkMode:title': text.darkMode,
+    'language:title': text.language,
+    'about:title': text.about,
+    'version:title': text.version,
+    '앱 제한 관리': localizedAppLimits[appLimitIndex],
+    '일일 목표 설정': localizedDailyGoals[dailyGoalIndex],
+    '알림 설정': notificationsEnabled ? text.on : text.off,
+    '언어 선택': language === 'ko' ? '한국어' : 'English',
+  };
+
+  const toggleDoNotDisturb = () => {
+    setDoNotDisturb(current => {
+      const next = !current;
+      setStatusMessage(next ? text.doNotDisturbOn : text.doNotDisturbOff);
+      return next;
+    });
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(current => {
+      const next = !current;
+      setStatusMessage(next ? text.darkModeOn : text.darkModeOff);
+      return next;
+    });
+  };
+
+  const handleItemPress = (item: SettingItem) => {
+    if (item.id === 'doNotDisturb') {
+      toggleDoNotDisturb();
+      return;
+    }
+
+    if (item.id === 'darkMode') {
+      toggleDarkMode();
+      return;
+    }
+
+    if (item.id === 'appLimit') {
+      setAppLimitIndex(current => {
+        const next = (current + 1) % appLimitOptions.length;
+        setStatusMessage(formatMessage(text.appLimitChanged, localizedAppLimits[next]));
+        return next;
+      });
+      return;
+    }
+
+    if (item.id === 'dailyGoal') {
+      setDailyGoalIndex(current => {
+        const next = (current + 1) % dailyGoalOptions.length;
+        setStatusMessage(formatMessage(text.dailyGoalChanged, localizedDailyGoals[next]));
+        return next;
+      });
+      return;
+    }
+
+    if (item.id === 'notifications') {
+      setNotificationsEnabled(current => {
+        const next = !current;
+        setStatusMessage(next ? text.notificationsOn : text.notificationsOff);
+        return next;
+      });
+      return;
+    }
+
+    if (item.id === 'language') {
+      const nextLanguage: AppLanguage = language === 'ko' ? 'en' : 'ko';
+      setLanguage(nextLanguage);
+      setStatusMessage(copy[nextLanguage].languageChanged);
+      return;
+    }
+
+    if (item.id === 'about') {
+      setStatusMessage(text.aboutMessage);
+      return;
+    }
+
+    if (item.id === 'version') {
+      setStatusMessage(text.versionMessage);
+    }
+  };
+
   return (
     <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
-            <View style={styles.header}>
-              <View>
-                <ThemedText style={styles.eyebrow}>SETTINGS</ThemedText>
-                <ThemedText style={styles.title}>설정</ThemedText>
-              </View>
-              <View style={styles.headerIcon}>
-                <SymbolView name={{ ios: 'gearshape.fill', android: 'settings', web: 'settings' }} tintColor="#204C35" size={24} />
-              </View>
-            </View>
+          <AppHeader />
 
-            <View style={styles.profileCard}>
-              <View style={styles.profileMark}>
-                <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor="#FFFFFF" size={26} />
+          <View style={styles.content}>
+            <Pressable
+              onPress={() => {
+                if (!user) {
+                  router.push('/login');
+                  return;
+                }
+
+                setStatusMessage(formatMessage(text.profileMessage, user.name));
+              }}
+              style={({ pressed }) => [styles.profileCard, pressed && styles.pressed]}>
+              <View style={styles.avatarWrap}>
+                <View style={styles.avatar} />
+                <View style={styles.avatarLeaf}>
+                  <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor="#FFFFFF" size={15} />
+                </View>
               </View>
               <View style={styles.profileCopy}>
-                <ThemedText style={styles.profileTitle}>Focus Tree</ThemedText>
-                <ThemedText style={styles.profileBody}>오늘도 조용히 숲을 키우는 중이에요.</ThemedText>
+                <ThemedText style={styles.profileName}>{user ? `${user.name}${language === 'ko' ? '님' : ''}` : text.profileDefaultName}</ThemedText>
+                <ThemedText style={styles.profileLevel}>{user ? user.email : text.profileDefaultLevel}</ThemedText>
               </View>
-              <View style={styles.scorePill}>
-                <ThemedText style={styles.scoreText}>Lv. 5</ThemedText>
-              </View>
-            </View>
-
-            <View style={styles.goalGrid}>
-              {goalOptions.map(item => (
-                <View key={item.label} style={styles.goalCard}>
-                  <ThemedText style={styles.goalValue}>{item.value}</ThemedText>
-                  <ThemedText style={styles.goalLabel}>{item.label}</ThemedText>
-                </View>
-              ))}
-            </View>
-
-            <View style={styles.sectionHeader}>
-              <ThemedText style={styles.sectionTitle}>환경 설정</ThemedText>
-              <ThemedText style={styles.sectionHint}>3개 켜짐</ThemedText>
-            </View>
-
-            <View style={styles.panel}>
-              {settings.map((item, index) => (
-                <View key={item.title} style={[styles.settingRow, index === settings.length - 1 && styles.lastRow]}>
-                  <View style={styles.settingIcon}>
-                    <SymbolView name={item.icon} tintColor="#204C35" size={21} />
-                  </View>
-                  <View style={styles.settingCopy}>
-                    <ThemedText style={styles.settingTitle}>{item.title}</ThemedText>
-                    <ThemedText style={styles.settingBody}>{item.body}</ThemedText>
-                  </View>
-                  <Switch
-                    value={item.enabled}
-                    trackColor={{ false: '#DCE5DC', true: '#7EC69A' }}
-                    thumbColor="#FFFFFF"
-                    ios_backgroundColor="#DCE5DC"
-                  />
-                </View>
-              ))}
-            </View>
-
-            <Pressable style={({ pressed }) => [styles.actionCard, pressed && styles.pressed]}>
-              <View style={styles.actionIcon}>
-                <SymbolView name={{ ios: 'chart.bar.fill', android: 'bar_chart', web: 'bar_chart' }} tintColor="#173C2A" size={22} />
-              </View>
-              <View style={styles.actionCopy}>
-                <ThemedText style={styles.actionTitle}>이번 주 리포트 보기</ThemedText>
-                <ThemedText style={styles.actionBody}>집중 패턴과 가장 잘 자란 나무를 확인해요.</ThemedText>
-              </View>
-              <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor="#6B7B70" size={22} />
+              <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor="#B5BDB3" size={22} />
             </Pressable>
+
+            <View style={styles.statusCard}>
+              <ThemedText style={styles.statusText}>{statusMessage || text.statusDefault}</ThemedText>
+            </View>
+
+            <SettingSection
+              darkMode={darkMode}
+              doNotDisturb={doNotDisturb}
+              items={focusSettings}
+              onItemPress={handleItemPress}
+              onToggleDarkMode={toggleDarkMode}
+              onToggleDoNotDisturb={toggleDoNotDisturb}
+              title={text.focusSettings}
+              valueOverrides={valueOverrides}
+            />
+            <SettingSection
+              darkMode={darkMode}
+              doNotDisturb={doNotDisturb}
+              items={appSettings}
+              onItemPress={handleItemPress}
+              onToggleDarkMode={toggleDarkMode}
+              onToggleDoNotDisturb={toggleDoNotDisturb}
+              title={text.appSettings}
+              valueOverrides={valueOverrides}
+            />
+            <SettingSection
+              darkMode={darkMode}
+              doNotDisturb={doNotDisturb}
+              items={generalSettings}
+              onItemPress={handleItemPress}
+              onToggleDarkMode={toggleDarkMode}
+              onToggleDoNotDisturb={toggleDoNotDisturb}
+              title={text.general}
+              valueOverrides={valueOverrides}
+            />
+
+            <Pressable
+              onPress={() => {
+                if (user) {
+                  logout();
+                }
+
+                router.push('/login');
+              }}
+              style={({ pressed }) => [styles.logoutButton, pressed && styles.pressed]}>
+              <ThemedText style={styles.logoutText}>{user ? text.logout : text.login}</ThemedText>
+            </Pressable>
+            <ThemedText style={styles.footerText}>{text.footer}</ThemedText>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -114,7 +453,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F4F7F0',
+    backgroundColor: '#FBFCF8',
     flex: 1,
   },
   safeArea: {
@@ -122,198 +461,153 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: 'center',
-    paddingBottom: BottomTabInset + 104,
-    paddingHorizontal: Spacing.three,
+    paddingBottom: BottomTabInset + 125,
     width: '100%',
   },
   content: {
     maxWidth: 430,
-    paddingTop: Spacing.four,
+    paddingHorizontal: Spacing.three,
     width: '100%',
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 22,
-  },
-  eyebrow: {
-    color: '#6D8174',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 1.5,
-    marginBottom: 5,
-  },
-  title: {
-    color: '#132318',
-    fontSize: 34,
-    fontWeight: '900',
-    lineHeight: 39,
-  },
-  headerIcon: {
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    height: 48,
-    justifyContent: 'center',
-    shadowColor: '#25422F',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    width: 48,
   },
   profileCard: {
     alignItems: 'center',
-    backgroundColor: '#173C2A',
-    borderRadius: 30,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E2D1',
+    borderRadius: 8,
+    borderWidth: 1,
     flexDirection: 'row',
-    gap: 14,
-    marginBottom: 14,
-    padding: 18,
+    marginBottom: 36,
+    minHeight: 94,
+    paddingHorizontal: 22,
+    shadowColor: '#A9BBA4',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
   },
-  profileMark: {
+  avatarWrap: {
+    height: 56,
+    marginRight: 22,
+    position: 'relative',
+    width: 56,
+  },
+  avatar: {
+    backgroundColor: '#142817',
+    borderRadius: 28,
+    height: 56,
+    shadowColor: '#496149',
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    width: 56,
+  },
+  avatarLeaf: {
     alignItems: 'center',
-    backgroundColor: '#2F7A4E',
-    borderRadius: 22,
-    height: 52,
+    backgroundColor: '#4B6D51',
+    borderColor: '#FFFFFF',
+    borderRadius: 11,
+    borderWidth: 2,
+    bottom: -2,
+    height: 22,
     justifyContent: 'center',
-    width: 52,
+    position: 'absolute',
+    right: -3,
+    width: 22,
   },
   profileCopy: {
     flex: 1,
   },
-  profileTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
+  profileName: {
+    color: '#0B180E',
+    fontSize: 15,
     fontWeight: '900',
-    marginBottom: 4,
+    lineHeight: 21,
   },
-  profileBody: {
-    color: '#CFE2D5',
+  profileLevel: {
+    color: '#253327',
+    fontSize: 13,
+    fontWeight: '500',
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  statusCard: {
+    backgroundColor: '#EAF3E6',
+    borderColor: '#C5D9BF',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 28,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  statusText: {
+    color: '#4B6D51',
     fontSize: 13,
     fontWeight: '700',
-    lineHeight: 18,
+    lineHeight: 19,
+    textAlign: 'center',
   },
-  scorePill: {
-    backgroundColor: '#EAF5EF',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  scoreText: {
-    color: '#173C2A',
-    fontSize: 12,
-    fontWeight: '900',
-  },
-  goalGrid: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 22,
-  },
-  goalCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
-    flex: 1,
-    minHeight: 86,
-    padding: 14,
-  },
-  goalValue: {
-    color: '#132318',
-    fontSize: 20,
-    fontWeight: '900',
-    marginBottom: 6,
-  },
-  goalLabel: {
-    color: '#68786E',
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  sectionHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+  section: {
+    marginBottom: 36,
   },
   sectionTitle: {
-    color: '#132318',
-    fontSize: 20,
-    fontWeight: '900',
-  },
-  sectionHint: {
-    color: '#6D8174',
+    color: '#4B6D51',
     fontSize: 13,
-    fontWeight: '800',
+    fontWeight: '900',
+    marginBottom: 12,
+    marginLeft: 6,
   },
-  panel: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 28,
-    marginBottom: 14,
-    paddingHorizontal: 14,
+  sectionCard: {
+    backgroundColor: '#F0F5EC',
+    borderColor: '#D1DEC9',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 20,
   },
   settingRow: {
     alignItems: 'center',
-    borderBottomColor: '#E8EFE8',
+    borderBottomColor: '#DDE6D8',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    gap: 12,
-    paddingVertical: 16,
+    minHeight: 60,
   },
   lastRow: {
     borderBottomWidth: 0,
   },
-  settingIcon: {
-    alignItems: 'center',
-    backgroundColor: '#EAF5EF',
-    borderRadius: 17,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  settingCopy: {
-    flex: 1,
-  },
   settingTitle: {
-    color: '#132318',
-    fontSize: 16,
-    fontWeight: '900',
-    marginBottom: 4,
-  },
-  settingBody: {
-    color: '#65766B',
-    fontSize: 12,
-    fontWeight: '700',
-    lineHeight: 17,
-  },
-  actionCard: {
-    alignItems: 'center',
-    backgroundColor: '#DFF2E6',
-    borderRadius: 26,
-    flexDirection: 'row',
-    gap: 12,
-    padding: 16,
-  },
-  actionIcon: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.72)',
-    borderRadius: 17,
-    height: 42,
-    justifyContent: 'center',
-    width: 42,
-  },
-  actionCopy: {
+    color: '#0B180E',
     flex: 1,
-  },
-  actionTitle: {
-    color: '#132318',
-    fontSize: 16,
-    fontWeight: '900',
-    marginBottom: 4,
-  },
-  actionBody: {
-    color: '#5D6F63',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
-    lineHeight: 17,
+    marginLeft: 14,
+  },
+  accessoryRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  valueText: {
+    color: '#7C877C',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  logoutButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 26,
+    minHeight: 44,
+  },
+  logoutText: {
+    color: '#1B281D',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  footerText: {
+    color: '#D0D4CE',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1.4,
+    marginBottom: 10,
+    marginTop: 8,
+    textAlign: 'center',
   },
   pressed: {
     opacity: 0.82,

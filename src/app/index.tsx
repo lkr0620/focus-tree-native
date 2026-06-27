@@ -1,9 +1,13 @@
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useEffect, useMemo, useState } from 'react';
 import { PanResponder, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppHeader } from '@/components/app-header';
+import { useAuth } from '@/components/auth-context';
+import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset, Spacing } from '@/constants/theme';
 
@@ -28,15 +32,64 @@ const seedOptions = [
 const timeMarks = ['10m', '45m', '80m', '120m'] as const;
 const minMinutes = 10;
 const maxMinutes = 120;
+const pauseHeroImage = 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=420&h=420&fit=crop';
 type SeedName = (typeof seedOptions)[number]['name'];
 
+const homeCopy = {
+  ko: {
+    cta: '숨 고르기 시작',
+    forest: '홈으로 돌아가기',
+    footnote: '네트워크 연결 상태가 잠시 불안정할 수 있습니다.',
+    pause: '잠시 멈춤',
+    pauseSubtitle: '괜찮아요, 다시 숨을 고르면 돼요.',
+    pauseTitle: '숨이 잠시 멈췄어요',
+    resume: '다시 시작하기',
+    seedLabel: '심을 씨앗을 고르세요',
+    sessionTitle: '지금 이 순간의 숨에 집중하세요.',
+    subtitle: '작은 멈춤이 나를 지키는 습관이 됩니다.',
+    title: '숨을 고르면 마음도 자라나요',
+    unit: '분',
+  },
+  en: {
+    cta: 'Start Breathing',
+    forest: 'Back Home',
+    footnote: 'Your network connection may be briefly unstable.',
+    pause: 'Pause',
+    pauseSubtitle: 'It is okay. You can return to your breath.',
+    pauseTitle: 'Your breath is paused',
+    resume: 'Start Again',
+    seedLabel: 'Choose a seed to plant',
+    sessionTitle: 'Focus on this breath, right now.',
+    subtitle: 'A small pause can become a habit that protects you.',
+    title: 'When breath settles, the heart grows',
+    unit: 'min',
+  },
+} as const;
+
+const seedNames = {
+  ko: {
+    단풍나무: '단풍나무',
+    분재: '분재',
+    삼나무: '삼나무',
+  },
+  en: {
+    단풍나무: 'Maple',
+    분재: 'Bonsai',
+    삼나무: 'Cedar',
+  },
+} as const;
+
 export default function HomeScreen() {
+  const { user } = useAuth();
+  const { language } = usePreferences();
+  const text = homeCopy[language];
   const [selectedSeed, setSelectedSeed] = useState<SeedName>(
     seedOptions.find(seed => seed.selected)?.name ?? seedOptions[0].name
   );
   const [selectedMinutes, setSelectedMinutes] = useState(25);
   const [sliderWidth, setSliderWidth] = useState(1);
   const [isBreathing, setIsBreathing] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(25 * 60);
 
   const selectedSeedOption = seedOptions.find(seed => seed.name === selectedSeed) ?? seedOptions[0];
@@ -66,7 +119,7 @@ export default function HomeScreen() {
   );
 
   useEffect(() => {
-    if (!isBreathing) {
+    if (!isBreathing || isPaused) {
       return;
     }
 
@@ -75,6 +128,7 @@ export default function HomeScreen() {
         if (current <= 1) {
           clearInterval(timer);
           setIsBreathing(false);
+          setIsPaused(false);
           return 0;
         }
 
@@ -83,24 +137,57 @@ export default function HomeScreen() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isBreathing]);
+  }, [isBreathing, isPaused]);
 
   return (
     <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={[styles.header, isBreathing && styles.sessionHeader]}>
-            <View style={styles.logoRow}>
-              <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor="#4B6D51" size={28} />
-              <ThemedText style={styles.logoText}>Soom</ThemedText>
-            </View>
-            <Pressable style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}>
-              <SymbolView name={{ ios: 'person.circle', android: 'account_circle', web: 'account_circle' }} tintColor="#243126" size={24} />
-            </Pressable>
-          </View>
+          <AppHeader
+            onRightPress={isPaused ? () => setIsPaused(false) : undefined}
+            rightButtonTone={isPaused ? 'soft' : 'plain'}
+            rightIcon={isPaused ? { ios: 'xmark', android: 'close', web: 'close' } : { ios: 'person.circle', android: 'account_circle', web: 'account_circle' }}
+            rightIconColor={isPaused ? '#203326' : '#243126'}
+            rightIconSize={isPaused ? 20 : 24}
+          />
 
           <View style={styles.content}>
-            {isBreathing ? (
+            {isPaused ? (
+              <View style={styles.pausedContent}>
+                <View style={styles.pauseImageHalo}>
+                  <Image source={{ uri: pauseHeroImage }} style={styles.pauseHeroImage} contentFit="cover" />
+                </View>
+
+                <View style={styles.pauseCopy}>
+                  <ThemedText style={styles.pauseTitle}>{text.pauseTitle}</ThemedText>
+                  <ThemedText style={styles.pauseSubtitle}>{text.pauseSubtitle}</ThemedText>
+                </View>
+
+                <View style={styles.pauseActions}>
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => setIsPaused(false)}
+                    style={({ pressed }) => [styles.resumeButton, pressed && styles.pressed]}>
+                    <SymbolView name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} tintColor="#FFFFFF" size={16} />
+                    <ThemedText style={styles.resumeText}>{text.resume}</ThemedText>
+                  </Pressable>
+
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => {
+                      setIsBreathing(false);
+                      setIsPaused(false);
+                      router.push('/');
+                    }}
+                    style={({ pressed }) => [styles.forestButton, pressed && styles.pressed]}>
+                    <SymbolView name={{ ios: 'tree', android: 'forest', web: 'park' }} tintColor="#4B6D51" size={16} />
+                    <ThemedText style={styles.forestText}>{text.forest}</ThemedText>
+                  </Pressable>
+                </View>
+
+                <ThemedText style={styles.pauseFootnote}>{text.footnote}</ThemedText>
+              </View>
+            ) : isBreathing ? (
               <View style={styles.sessionContent}>
                 <View style={styles.sessionTimerWrap}>
                   <View style={styles.sessionTimeBadge}>
@@ -124,21 +211,21 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
-                <ThemedText style={styles.sessionTitle}>지금 이 순간의 숨에 집중하세요.</ThemedText>
+                <ThemedText style={styles.sessionTitle}>{text.sessionTitle}</ThemedText>
 
                 <Pressable
                   accessibilityRole="button"
-                  onPress={() => setIsBreathing(false)}
+                  onPress={() => setIsPaused(true)}
                   style={({ pressed }) => [styles.pauseButton, pressed && styles.pressed]}>
                   <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor="#4F554D" size={15} />
-                  <ThemedText style={styles.pauseText}>잠시 멈춤</ThemedText>
+                  <ThemedText style={styles.pauseText}>{text.pause}</ThemedText>
                 </Pressable>
               </View>
             ) : (
               <>
                 <View style={styles.heroCopy}>
-                  <ThemedText style={styles.title}>멈추고, 비우고, 나의 숨을 틔우다</ThemedText>
-                  <ThemedText style={styles.subtitle}>잠시 멈춰, 당신의 숨을 고르세요.</ThemedText>
+                  <ThemedText style={styles.title}>{text.title}</ThemedText>
+                  <ThemedText style={styles.subtitle}>{text.subtitle}</ThemedText>
                 </View>
 
                 <View style={styles.timerWrap}>
@@ -155,7 +242,7 @@ export default function HomeScreen() {
                       />
                       <View style={styles.timerInnerDisk}>
                         <ThemedText style={styles.timerValue}>{selectedMinutes}</ThemedText>
-                        <ThemedText style={styles.timerUnit}>분</ThemedText>
+                        <ThemedText style={styles.timerUnit}>{text.unit}</ThemedText>
                       </View>
                     </View>
                   </View>
@@ -182,7 +269,7 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
-                <ThemedText style={styles.sectionTitle}>심을 씨앗을 고르세요</ThemedText>
+                <ThemedText style={styles.sectionTitle}>{text.seedLabel}</ThemedText>
 
                 <View style={styles.seedRow}>
                   {seedOptions.map(seed => {
@@ -196,7 +283,7 @@ export default function HomeScreen() {
                         onPress={() => setSelectedSeed(seed.name)}
                         style={({ pressed }) => [styles.seedCard, isSelected && styles.seedCardSelected, pressed && styles.pressed]}>
                         <Image source={{ uri: seed.uri }} style={styles.seedImage} contentFit="cover" />
-                        <ThemedText style={styles.seedName}>{seed.name}</ThemedText>
+                        <ThemedText style={styles.seedName}>{seedNames[language][seed.name]}</ThemedText>
                       </Pressable>
                     );
                   })}
@@ -205,11 +292,17 @@ export default function HomeScreen() {
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => {
+                    if (!user) {
+                      router.push('/login');
+                      return;
+                    }
+
                     setRemainingSeconds(selectedMinutes * 60);
                     setIsBreathing(true);
+                    setIsPaused(false);
                   }}
                   style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}>
-                  <ThemedText style={styles.ctaText}>숨 고르기 시작</ThemedText>
+                  <ThemedText style={styles.ctaText}>{text.cta}</ThemedText>
                   <SymbolView name={{ ios: 'wind', android: 'air', web: 'air' }} tintColor="#FFFFFF" size={25} />
                 </Pressable>
               </>
@@ -231,42 +324,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: 'center',
-    paddingBottom: BottomTabInset + 108,
+    paddingBottom: BottomTabInset + 125,
     width: '100%',
   },
   content: {
     maxWidth: 430,
     paddingHorizontal: Spacing.three,
     width: '100%',
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 28,
-    paddingHorizontal: Spacing.three,
-    paddingTop: 24,
-    width: '100%',
-  },
-  sessionHeader: {
-    marginBottom: 54,
-  },
-  logoRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-  },
-  logoText: {
-    color: '#4B6D51',
-    fontSize: 22,
-    fontWeight: '900',
-    letterSpacing: 3,
-  },
-  profileButton: {
-    alignItems: 'center',
-    height: 38,
-    justifyContent: 'center',
-    width: 38,
   },
   heroCopy: {
     alignItems: 'center',
@@ -366,6 +430,102 @@ const styles = StyleSheet.create({
     color: '#4F554D',
     fontSize: 14,
     fontWeight: '900',
+  },
+  pausedContent: {
+    alignItems: 'center',
+    minHeight: 560,
+    paddingBottom: 34,
+    paddingTop: 4,
+  },
+  pauseImageHalo: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+    borderRadius: 86,
+    borderWidth: 3,
+    height: 172,
+    justifyContent: 'center',
+    marginBottom: 42,
+    shadowColor: '#84907E',
+    shadowOffset: { width: 0, height: 24 },
+    shadowOpacity: 0.18,
+    shadowRadius: 34,
+    width: 172,
+  },
+  pauseHeroImage: {
+    borderRadius: 80,
+    height: 160,
+    width: 160,
+  },
+  pauseCopy: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  pauseTitle: {
+    color: '#1F231E',
+    fontSize: 24,
+    fontWeight: '500',
+    lineHeight: 32,
+    textAlign: 'center',
+  },
+  pauseSubtitle: {
+    color: '#3F453D',
+    fontSize: 15,
+    fontWeight: '500',
+    lineHeight: 22,
+    marginTop: 14,
+    textAlign: 'center',
+  },
+  pauseActions: {
+    alignItems: 'center',
+    gap: 14,
+    marginBottom: 38,
+    width: '100%',
+  },
+  resumeButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#4B6D51',
+    borderRadius: 999,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 52,
+    shadowColor: '#314B36',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.22,
+    shadowRadius: 12,
+    width: '74%',
+  },
+  resumeText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  forestButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#4B6D51',
+    borderRadius: 999,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 52,
+    width: '74%',
+  },
+  forestText: {
+    color: '#4B6D51',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  pauseFootnote: {
+    color: '#999F96',
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
+    textAlign: 'center',
   },
   timerWrap: {
     alignItems: 'center',
@@ -478,7 +638,7 @@ const styles = StyleSheet.create({
   seedCard: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderColor: 'transparent',
+    borderColor: '#DDE6D8',
     borderRadius: 11,
     borderWidth: 2,
     flex: 1,
@@ -486,14 +646,15 @@ const styles = StyleSheet.create({
     minHeight: 124,
     paddingHorizontal: 10,
     paddingTop: 18,
-    shadowColor: '#65705F',
+    shadowColor: '#9BAF96',
     shadowOffset: { width: 0, height: 9 },
     shadowOpacity: 0.08,
     shadowRadius: 18,
   },
   seedCardSelected: {
-    borderColor: '#4B6D51',
-    shadowOpacity: 0.14,
+    backgroundColor: '#F0F7EE',
+    borderColor: '#4B8A58',
+    shadowOpacity: 0.18,
   },
   seedImage: {
     borderRadius: 28,
@@ -509,13 +670,13 @@ const styles = StyleSheet.create({
   ctaButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#4B6D51',
+    backgroundColor: '#3E7A4A',
     borderRadius: 31,
     flexDirection: 'row',
     gap: 8,
     justifyContent: 'center',
     minHeight: 60,
-    shadowColor: '#4B6D51',
+    shadowColor: '#3E7A4A',
     shadowOffset: { width: 0, height: 16 },
     shadowOpacity: 0.18,
     shadowRadius: 22,
