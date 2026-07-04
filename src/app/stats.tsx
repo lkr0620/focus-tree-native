@@ -5,20 +5,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '@/components/app-header';
 import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Palette, Spacing } from '@/constants/theme';
 
 const weekDays = {
   en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   ko: ['월', '화', '수', '목', '금', '토', '일'],
 } as const;
 const growthItems = [
-  { name: { en: 'Cedar', ko: 'Cedar(삼나무)' }, stage: { en: '3 trees grown', ko: '3그루 성장' }, minutes: '180m', tone: '#D7F4DE', icon: '#4F8D62' },
-  { name: { en: 'Maple', ko: 'Maple(단풍나무)' }, stage: { en: '2 trees grown', ko: '2그루 성장' }, minutes: '120m', tone: '#E8DDC7', icon: '#8A6B3C' },
-  { name: { en: 'Willow', ko: 'Willow(버드나무)' }, stage: { en: '1 tree grown', ko: '1그루 성장' }, minutes: '60m', tone: '#D6EEF8', icon: '#3A7A92' },
+  { name: { en: 'Cedar', ko: 'Cedar(삼나무)' }, stage: { en: '3 trees grown', ko: '3그루 성장' }, minutes: '180m', tone: Palette.primaryTint, icon: Palette.primary },
+  { name: { en: 'Maple', ko: 'Maple(단풍나무)' }, stage: { en: '2 trees grown', ko: '2그루 성장' }, minutes: '120m', tone: Palette.goldSoft, icon: Palette.goldDeep },
+  { name: { en: 'Willow', ko: 'Willow(버드나무)' }, stage: { en: '1 tree grown', ko: '1그루 성장' }, minutes: '60m', tone: Palette.surfaceSoft, icon: Palette.inkSoft },
 ] as const;
 const heatmap = [
-  ['#F2F4F0', '#EFF2ED', '#E8EDE6', '#DFE8DD', '#CADCC9'],
-  ['#F5F6F3', '#F1F3EF', '#ECEFE9', '#E5EAE2', '#DFE8DD'],
+  ['rgba(31,61,46,0.08)', 'rgba(31,61,46,0.14)', 'rgba(31,61,46,0.22)', 'rgba(31,61,46,0.34)', 'rgba(31,61,46,0.55)'],
+  ['rgba(31,61,46,0.05)', 'rgba(31,61,46,0.09)', 'rgba(31,61,46,0.16)', 'rgba(31,61,46,0.24)', 'rgba(31,61,46,0.34)'],
 ] as const;
 
 function DonutChart() {
@@ -78,11 +78,11 @@ function FocusHeatmap() {
     <View style={styles.heatmapWrap}>
       <View style={styles.legendRow}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendSwatch, { backgroundColor: '#ECEFE9' }]} />
+          <View style={[styles.legendSwatch, { backgroundColor: 'rgba(31,61,46,0.1)' }]} />
           <ThemedText style={styles.legendText}>{labels.low}</ThemedText>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendSwatch, { backgroundColor: '#4B6D51' }]} />
+          <View style={[styles.legendSwatch, { backgroundColor: Palette.primary }]} />
           <ThemedText style={styles.legendText}>{labels.high}</ThemedText>
         </View>
       </View>
@@ -156,7 +156,7 @@ export default function StatsScreen() {
             <View style={styles.panel}>
               <View style={styles.panelHeader}>
                 <ThemedText style={styles.panelTitle}>{text.weekly}</ThemedText>
-                <SymbolView name={{ ios: 'calendar', android: 'calendar_month', web: 'calendar_month' }} tintColor="#7C6A48" size={20} />
+                <SymbolView name={{ ios: 'calendar', android: 'calendar_month', web: 'calendar_month' }} tintColor={Palette.gold} size={20} />
               </View>
               <WeeklyChart />
             </View>
@@ -190,7 +190,7 @@ export default function StatsScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FAFBF7',
+    backgroundColor: Palette.paper,
     flex: 1,
   },
   safeArea: {
@@ -210,22 +210,23 @@ const styles = StyleSheet.create({
     marginBottom: 28,
   },
   kicker: {
-    color: '#0D1B10',
-    fontSize: 15,
-    fontWeight: '900',
-    lineHeight: 22,
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 22,
+    fontWeight: '600',
+    lineHeight: 29,
   },
   subtitle: {
-    color: '#727A72',
+    color: Palette.inkSoft,
     fontSize: 13,
     fontWeight: '500',
     lineHeight: 20,
-    marginTop: 4,
+    marginTop: 5,
   },
   summaryCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D6E2D1',
-    borderRadius: 8,
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -234,25 +235,28 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: 30,
     paddingVertical: 28,
-    shadowColor: '#A9BBA4',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.06,
     shadowRadius: 22,
   },
   cardLabel: {
-    color: '#7C847B',
-    fontSize: 13,
-    fontWeight: '500',
+    color: Palette.muted,
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.6,
     marginBottom: 14,
+    textTransform: 'uppercase',
   },
   bigNumber: {
-    color: '#4B6D51',
-    fontSize: 28,
-    fontWeight: '900',
-    lineHeight: 36,
+    color: Palette.primary,
+    fontFamily: Fonts?.serif,
+    fontSize: 30,
+    fontWeight: '600',
+    lineHeight: 38,
   },
   deltaText: {
-    color: '#4E5A50',
+    color: Palette.goldDeep,
     fontSize: 12,
     fontWeight: '600',
     marginTop: 20,
@@ -263,14 +267,13 @@ const styles = StyleSheet.create({
     width: 82,
   },
   donutBase: {
-    backgroundColor: '#C9CEC6',
+    backgroundColor: Palette.primaryTint,
     borderRadius: 41,
     height: 82,
-    opacity: 0.55,
     width: 82,
   },
   donutHole: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Palette.surface,
     borderRadius: 27,
     height: 54,
     left: 14,
@@ -279,16 +282,16 @@ const styles = StyleSheet.create({
     width: 54,
   },
   panel: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D6E2D1',
-    borderRadius: 8,
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     marginBottom: 32,
     minHeight: 176,
     padding: 24,
-    shadowColor: '#A9BBA4',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 18,
   },
   panelHeader: {
@@ -297,7 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   panelTitle: {
-    color: '#1D291F',
+    color: Palette.ink,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -309,16 +312,17 @@ const styles = StyleSheet.create({
   },
   bestBadge: {
     alignSelf: 'center',
-    backgroundColor: '#343126',
-    borderRadius: 2,
+    backgroundColor: Palette.ink,
+    borderRadius: 3,
     marginBottom: 20,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   bestText: {
-    color: '#FFFFFF',
+    color: Palette.goldSoft,
     fontSize: 9,
-    fontWeight: '900',
+    fontWeight: '700',
+    letterSpacing: 0.6,
   },
   chartBars: {
     alignItems: 'flex-end',
@@ -331,21 +335,21 @@ const styles = StyleSheet.create({
     width: 22,
   },
   bar: {
-    backgroundColor: '#EEF1EC',
+    backgroundColor: Palette.surfaceSoft,
     borderRadius: 3,
     width: 12,
   },
   bestBar: {
-    backgroundColor: '#AFC5B2',
+    backgroundColor: Palette.gold,
   },
   dayLabel: {
-    color: '#7E867E',
+    color: Palette.muted,
     fontSize: 11,
     fontWeight: '600',
   },
   bestDayLabel: {
-    color: '#253125',
-    fontWeight: '900',
+    color: Palette.ink,
+    fontWeight: '700',
   },
   growthList: {
     gap: 18,
@@ -353,8 +357,8 @@ const styles = StyleSheet.create({
   },
   growthRow: {
     alignItems: 'center',
-    backgroundColor: '#EEF4EA',
-    borderRadius: 8,
+    backgroundColor: Palette.paper,
+    borderRadius: 10,
     flexDirection: 'row',
     minHeight: 64,
     paddingHorizontal: 14,
@@ -371,24 +375,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   growthName: {
-    color: '#0B180E',
+    color: Palette.ink,
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 16,
   },
   growthStage: {
-    color: '#5C665D',
+    color: Palette.inkSoft,
     fontSize: 11,
     fontWeight: '500',
     marginTop: 2,
   },
   growthMinutes: {
-    color: '#0D3E24',
+    color: Palette.primary,
     fontSize: 12,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   panelBody: {
-    color: '#707A70',
+    color: Palette.inkSoft,
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
@@ -412,9 +416,9 @@ const styles = StyleSheet.create({
     width: 8,
   },
   legendText: {
-    color: '#697269',
+    color: Palette.muted,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   timeLabels: {
     flexDirection: 'row',
@@ -423,9 +427,9 @@ const styles = StyleSheet.create({
     marginLeft: 48,
   },
   timeLabel: {
-    color: '#97A097',
+    color: Palette.mutedLight,
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   heatmapRow: {
     alignItems: 'center',
@@ -434,9 +438,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   rowTime: {
-    color: '#5E685F',
+    color: Palette.inkSoft,
     fontSize: 10,
-    fontWeight: '900',
+    fontWeight: '700',
     marginRight: 12,
     width: 28,
   },
@@ -451,23 +455,25 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   quoteMark: {
-    color: '#9CB79E',
+    color: Palette.gold,
+    fontFamily: Fonts?.serif,
     fontSize: 32,
-    fontWeight: '900',
+    fontWeight: '600',
     lineHeight: 32,
   },
   quoteText: {
-    color: '#3E4A40',
-    fontSize: 13,
+    color: Palette.inkSoft,
+    fontFamily: Fonts?.serif,
+    fontSize: 14,
     fontStyle: 'italic',
-    fontWeight: '600',
-    lineHeight: 20,
+    fontWeight: '500',
+    lineHeight: 21,
     marginTop: 6,
     maxWidth: 320,
     textAlign: 'center',
   },
   quoteLine: {
-    backgroundColor: '#CCD5CD',
+    backgroundColor: Palette.line,
     height: 1,
     marginTop: 22,
     width: 72,

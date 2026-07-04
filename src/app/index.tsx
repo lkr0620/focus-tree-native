@@ -9,7 +9,7 @@ import { AppHeader } from '@/components/app-header';
 import { useAuth } from '@/components/auth-context';
 import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Palette, Spacing } from '@/constants/theme';
 
 const seedOptions = [
   {
@@ -37,6 +37,11 @@ type SeedName = (typeof seedOptions)[number]['name'];
 
 const homeCopy = {
   ko: {
+    complete: '집중을 완료했어요',
+    completeSubtitle: '오늘의 숨결이 숲 어딘가에 뿌리를 내렸어요.',
+    completeTitle: '숨을 다 골랐어요',
+    completeViewForest: '내 숲 보러 가기',
+    completeAgain: '다시 숨 고르기',
     cta: '숨 고르기 시작',
     forest: '홈으로 돌아가기',
     footnote: '네트워크 연결 상태가 잠시 불안정할 수 있습니다.',
@@ -51,6 +56,11 @@ const homeCopy = {
     unit: '분',
   },
   en: {
+    complete: 'Focus complete',
+    completeSubtitle: 'Today’s breath has taken root somewhere in your forest.',
+    completeTitle: 'You caught your breath',
+    completeViewForest: 'View My Forest',
+    completeAgain: 'Choose Again',
     cta: 'Start Breathing',
     forest: 'Back Home',
     footnote: 'Your network connection may be briefly unstable.',
@@ -90,6 +100,7 @@ export default function HomeScreen() {
   const [sliderWidth, setSliderWidth] = useState(1);
   const [isBreathing, setIsBreathing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(25 * 60);
 
   const selectedSeedOption = seedOptions.find(seed => seed.name === selectedSeed) ?? seedOptions[0];
@@ -118,6 +129,10 @@ export default function HomeScreen() {
     [sliderWidth]
   );
 
+  const adjustSelectedMinutes = (delta: number) => {
+    setSelectedMinutes(current => Math.min(maxMinutes, Math.max(minMinutes, current + delta)));
+  };
+
   useEffect(() => {
     if (!isBreathing || isPaused) {
       return;
@@ -129,6 +144,7 @@ export default function HomeScreen() {
           clearInterval(timer);
           setIsBreathing(false);
           setIsPaused(false);
+          setIsComplete(true);
           return 0;
         }
 
@@ -147,7 +163,7 @@ export default function HomeScreen() {
             onRightPress={isPaused ? () => setIsPaused(false) : undefined}
             rightButtonTone={isPaused ? 'soft' : 'plain'}
             rightIcon={isPaused ? { ios: 'xmark', android: 'close', web: 'close' } : { ios: 'person.circle', android: 'account_circle', web: 'account_circle' }}
-            rightIconColor={isPaused ? '#203326' : '#243126'}
+            rightIconColor={isPaused ? Palette.ink : Palette.ink}
             rightIconSize={isPaused ? 20 : 24}
           />
 
@@ -168,7 +184,7 @@ export default function HomeScreen() {
                     accessibilityRole="button"
                     onPress={() => setIsPaused(false)}
                     style={({ pressed }) => [styles.resumeButton, pressed && styles.pressed]}>
-                    <SymbolView name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} tintColor="#FFFFFF" size={16} />
+                    <SymbolView name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} tintColor={Palette.goldSoft} size={16} />
                     <ThemedText style={styles.resumeText}>{text.resume}</ThemedText>
                   </Pressable>
 
@@ -177,10 +193,9 @@ export default function HomeScreen() {
                     onPress={() => {
                       setIsBreathing(false);
                       setIsPaused(false);
-                      router.push('/');
                     }}
                     style={({ pressed }) => [styles.forestButton, pressed && styles.pressed]}>
-                    <SymbolView name={{ ios: 'tree', android: 'forest', web: 'park' }} tintColor="#4B6D51" size={16} />
+                    <SymbolView name={{ ios: 'tree', android: 'forest', web: 'park' }} tintColor={Palette.primary} size={16} />
                     <ThemedText style={styles.forestText}>{text.forest}</ThemedText>
                   </Pressable>
                 </View>
@@ -191,7 +206,7 @@ export default function HomeScreen() {
               <View style={styles.sessionContent}>
                 <View style={styles.sessionTimerWrap}>
                   <View style={styles.sessionTimeBadge}>
-                    <SymbolView name={{ ios: 'stopwatch', android: 'timer', web: 'timer' }} tintColor="#7E847B" size={16} />
+                    <SymbolView name={{ ios: 'stopwatch', android: 'timer', web: 'timer' }} tintColor={Palette.muted} size={16} />
                     <ThemedText style={styles.sessionTimeText}>{remainingTimeText}</ThemedText>
                   </View>
 
@@ -202,7 +217,7 @@ export default function HomeScreen() {
                         style={[
                           styles.sessionProgressRing,
                           {
-                            backgroundImage: `conic-gradient(from 0deg, #9AB99F 0deg ${sessionProgressDegrees}deg, transparent ${sessionProgressDegrees}deg 360deg)`,
+                            backgroundImage: `conic-gradient(from 0deg, ${Palette.gold} 0deg ${sessionProgressDegrees}deg, transparent ${sessionProgressDegrees}deg 360deg)`,
                           } as object,
                         ]}
                       />
@@ -217,9 +232,44 @@ export default function HomeScreen() {
                   accessibilityRole="button"
                   onPress={() => setIsPaused(true)}
                   style={({ pressed }) => [styles.pauseButton, pressed && styles.pressed]}>
-                  <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor="#4F554D" size={15} />
+                  <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor={Palette.inkSoft} size={15} />
                   <ThemedText style={styles.pauseText}>{text.pause}</ThemedText>
                 </Pressable>
+              </View>
+            ) : isComplete ? (
+              <View style={styles.pausedContent}>
+                <View style={styles.pauseImageHalo}>
+                  <Image source={{ uri: selectedSeedOption.uri }} style={styles.pauseHeroImage} contentFit="cover" />
+                </View>
+
+                <View style={styles.pauseCopy}>
+                  <View style={styles.completeBadge}>
+                    <SymbolView name={{ ios: 'checkmark', android: 'check', web: 'check' }} tintColor={Palette.goldSoft} size={13} />
+                    <ThemedText style={styles.completeBadgeText}>{text.complete}</ThemedText>
+                  </View>
+                  <ThemedText style={styles.pauseTitle}>{text.completeTitle}</ThemedText>
+                  <ThemedText style={styles.pauseSubtitle}>{text.completeSubtitle}</ThemedText>
+                </View>
+
+                <View style={styles.pauseActions}>
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => {
+                      setIsComplete(false);
+                      router.push('/explore');
+                    }}
+                    style={({ pressed }) => [styles.resumeButton, pressed && styles.pressed]}>
+                    <SymbolView name={{ ios: 'tree', android: 'forest', web: 'park' }} tintColor={Palette.goldSoft} size={16} />
+                    <ThemedText style={styles.resumeText}>{text.completeViewForest}</ThemedText>
+                  </Pressable>
+
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => setIsComplete(false)}
+                    style={({ pressed }) => [styles.forestButton, pressed && styles.pressed]}>
+                    <ThemedText style={styles.forestText}>{text.completeAgain}</ThemedText>
+                  </Pressable>
+                </View>
               </View>
             ) : (
               <>
@@ -236,7 +286,7 @@ export default function HomeScreen() {
                         style={[
                           styles.timerProgressRing,
                           {
-                            backgroundImage: `conic-gradient(from 0deg, #4B6D51 0deg ${progressDegrees}deg, transparent ${progressDegrees}deg 360deg)`,
+                            backgroundImage: `conic-gradient(from 0deg, ${Palette.primary} 0deg ${progressDegrees}deg, transparent ${progressDegrees}deg 360deg)`,
                           } as object,
                         ]}
                       />
@@ -250,8 +300,19 @@ export default function HomeScreen() {
 
                 <View style={styles.sliderBlock}>
                   <View
+                    accessibilityActions={[
+                      { name: 'increment', label: 'increment' },
+                      { name: 'decrement', label: 'decrement' },
+                    ]}
                     accessibilityRole="adjustable"
                     accessibilityValue={{ min: minMinutes, max: maxMinutes, now: selectedMinutes }}
+                    onAccessibilityAction={event => {
+                      if (event.nativeEvent.actionName === 'increment') {
+                        adjustSelectedMinutes(5);
+                      } else if (event.nativeEvent.actionName === 'decrement') {
+                        adjustSelectedMinutes(-5);
+                      }
+                    }}
                     onLayout={event => setSliderWidth(event.nativeEvent.layout.width)}
                     style={styles.sliderTouchArea}
                     {...sliderResponder.panHandlers}>
@@ -303,7 +364,7 @@ export default function HomeScreen() {
                   }}
                   style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}>
                   <ThemedText style={styles.ctaText}>{text.cta}</ThemedText>
-                  <SymbolView name={{ ios: 'wind', android: 'air', web: 'air' }} tintColor="#FFFFFF" size={25} />
+                  <SymbolView name={{ ios: 'wind', android: 'air', web: 'air' }} tintColor={Palette.goldSoft} size={23} />
                 </Pressable>
               </>
             )}
@@ -316,7 +377,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FAFBF7',
+    backgroundColor: Palette.paper,
     flex: 1,
   },
   safeArea: {
@@ -334,23 +395,24 @@ const styles = StyleSheet.create({
   },
   heroCopy: {
     alignItems: 'center',
-    marginBottom: 34,
+    marginBottom: 38,
   },
   title: {
-    color: '#20221F',
-    fontSize: 27,
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 28,
     fontWeight: '600',
-    lineHeight: 36,
+    lineHeight: 37,
     maxWidth: 340,
     textAlign: 'center',
   },
   subtitle: {
-    color: '#4D514C',
-    fontSize: 16,
+    color: Palette.inkSoft,
+    fontSize: 15,
     fontStyle: 'italic',
     fontWeight: '500',
     lineHeight: 22,
-    marginTop: 17,
+    marginTop: 14,
     textAlign: 'center',
   },
   sessionContent: {
@@ -368,20 +430,20 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   sessionTimeText: {
-    color: '#7E847B',
+    color: Palette.muted,
     fontSize: 17,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   sessionCircleShadow: {
     borderRadius: 143,
-    shadowColor: '#8E9C90',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 18 },
-    shadowOpacity: 0.22,
+    shadowOpacity: 0.14,
     shadowRadius: 26,
   },
   sessionCircle: {
     alignItems: 'center',
-    backgroundColor: '#FDFEFC',
+    backgroundColor: Palette.surface,
     borderRadius: 143,
     height: 286,
     justifyContent: 'center',
@@ -389,7 +451,7 @@ const styles = StyleSheet.create({
     width: 286,
   },
   sessionTrackRing: {
-    borderColor: '#DFE5DE',
+    borderColor: Palette.line,
     borderRadius: 143,
     borderWidth: 5,
     height: 286,
@@ -408,17 +470,18 @@ const styles = StyleSheet.create({
     width: 264,
   },
   sessionTitle: {
-    color: '#394238',
-    fontSize: 25,
-    fontWeight: '800',
-    lineHeight: 34,
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 24,
+    fontWeight: '600',
+    lineHeight: 33,
     marginBottom: 16,
     textAlign: 'center',
   },
   pauseButton: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E7E9E4',
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -427,9 +490,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   pauseText: {
-    color: '#4F554D',
+    color: Palette.inkSoft,
     fontSize: 14,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   pausedContent: {
     alignItems: 'center',
@@ -439,16 +502,16 @@ const styles = StyleSheet.create({
   },
   pauseImageHalo: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
+    backgroundColor: Palette.surface,
+    borderColor: Palette.surface,
     borderRadius: 86,
     borderWidth: 3,
     height: 172,
     justifyContent: 'center',
     marginBottom: 42,
-    shadowColor: '#84907E',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 24 },
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.12,
     shadowRadius: 34,
     width: 172,
   },
@@ -461,15 +524,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 40,
   },
+  completeBadge: {
+    alignItems: 'center',
+    backgroundColor: Palette.primary,
+    borderRadius: 999,
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  completeBadgeText: {
+    color: Palette.goldSoft,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+  },
   pauseTitle: {
-    color: '#1F231E',
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
     fontSize: 24,
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 32,
     textAlign: 'center',
   },
   pauseSubtitle: {
-    color: '#3F453D',
+    color: Palette.inkSoft,
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 22,
@@ -485,28 +566,29 @@ const styles = StyleSheet.create({
   resumeButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#4B6D51',
+    backgroundColor: Palette.primary,
     borderRadius: 999,
     flexDirection: 'row',
     gap: 8,
     justifyContent: 'center',
     minHeight: 52,
-    shadowColor: '#314B36',
+    shadowColor: Palette.primaryDeep,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.22,
     shadowRadius: 12,
     width: '74%',
   },
   resumeText: {
-    color: '#FFFFFF',
+    color: Palette.goldSoft,
     fontSize: 15,
-    fontWeight: '900',
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   forestButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#4B6D51',
+    backgroundColor: Palette.surface,
+    borderColor: Palette.primary,
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -516,12 +598,12 @@ const styles = StyleSheet.create({
     width: '74%',
   },
   forestText: {
-    color: '#4B6D51',
+    color: Palette.primary,
     fontSize: 15,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   pauseFootnote: {
-    color: '#999F96',
+    color: Palette.mutedLight,
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
@@ -533,14 +615,14 @@ const styles = StyleSheet.create({
   },
   timerShadow: {
     borderRadius: 126,
-    shadowColor: '#9AA99D',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 19 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.12,
     shadowRadius: 27,
   },
   timerCircle: {
     alignItems: 'center',
-    backgroundColor: '#FDFEFC',
+    backgroundColor: Palette.surface,
     borderRadius: 120,
     height: 240,
     justifyContent: 'center',
@@ -548,7 +630,7 @@ const styles = StyleSheet.create({
     width: 240,
   },
   timerTrackRing: {
-    borderColor: '#E5E7E1',
+    borderColor: Palette.line,
     borderRadius: 120,
     borderWidth: 5,
     height: 240,
@@ -563,22 +645,25 @@ const styles = StyleSheet.create({
   },
   timerInnerDisk: {
     alignItems: 'center',
-    backgroundColor: '#FDFEFC',
+    backgroundColor: Palette.surface,
     borderRadius: 112,
     height: 224,
     justifyContent: 'center',
     width: 224,
   },
   timerValue: {
-    color: '#4B6D51',
-    fontSize: 43,
-    fontWeight: '300',
-    lineHeight: 50,
+    color: Palette.primary,
+    fontFamily: Fonts?.serif,
+    fontSize: 46,
+    fontWeight: '400',
+    lineHeight: 52,
   },
   timerUnit: {
-    color: '#20221F',
-    fontSize: 15,
-    fontWeight: '700',
+    color: Palette.muted,
+    fontSize: 13,
+    fontWeight: '600',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
   },
   sliderBlock: {
     marginBottom: 36,
@@ -589,22 +674,22 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   sliderTrack: {
-    backgroundColor: '#ECEEE8',
+    backgroundColor: Palette.line,
     borderRadius: 999,
-    height: 8,
+    height: 6,
     justifyContent: 'center',
     overflow: 'visible',
   },
   sliderFill: {
-    backgroundColor: '#4B6D51',
+    backgroundColor: Palette.primary,
     borderRadius: 999,
-    height: 8,
+    height: 6,
     left: 0,
     position: 'absolute',
   },
   sliderKnob: {
-    backgroundColor: '#4B6D51',
-    borderColor: '#FFFFFF',
+    backgroundColor: Palette.primary,
+    borderColor: Palette.surface,
     borderRadius: 13,
     borderWidth: 4,
     height: 26,
@@ -618,16 +703,18 @@ const styles = StyleSheet.create({
     marginTop: 19,
   },
   timeMark: {
-    color: '#7D847D',
-    fontSize: 13,
+    color: Palette.mutedLight,
+    fontSize: 12,
     fontWeight: '500',
   },
   sectionTitle: {
-    color: '#777B72',
-    fontSize: 15,
-    fontWeight: '900',
+    color: Palette.inkSoft,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.4,
     marginBottom: 21,
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
   seedRow: {
     flexDirection: 'row',
@@ -637,24 +724,24 @@ const styles = StyleSheet.create({
   },
   seedCard: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#DDE6D8',
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
     borderRadius: 11,
-    borderWidth: 2,
+    borderWidth: 1.5,
     flex: 1,
     maxWidth: 98,
     minHeight: 124,
     paddingHorizontal: 10,
     paddingTop: 18,
-    shadowColor: '#9BAF96',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 9 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.06,
     shadowRadius: 18,
   },
   seedCardSelected: {
-    backgroundColor: '#F0F7EE',
-    borderColor: '#4B8A58',
-    shadowOpacity: 0.18,
+    backgroundColor: Palette.primaryTint,
+    borderColor: Palette.gold,
+    shadowOpacity: 0.1,
   },
   seedImage: {
     borderRadius: 28,
@@ -663,29 +750,30 @@ const styles = StyleSheet.create({
     width: 56,
   },
   seedName: {
-    color: '#20221F',
-    fontSize: 14,
-    fontWeight: '900',
+    color: Palette.ink,
+    fontSize: 13,
+    fontWeight: '600',
   },
   ctaButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#3E7A4A',
+    backgroundColor: Palette.primary,
     borderRadius: 31,
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
     justifyContent: 'center',
     minHeight: 60,
-    shadowColor: '#3E7A4A',
+    shadowColor: Palette.primaryDeep,
     shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.22,
     shadowRadius: 22,
     width: '92%',
   },
   ctaText: {
-    color: '#FFFFFF',
-    fontSize: 23,
-    fontWeight: '900',
+    color: Palette.goldSoft,
+    fontSize: 20,
+    fontWeight: '600',
+    letterSpacing: 0.4,
   },
   pressed: {
     opacity: 0.82,

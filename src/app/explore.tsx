@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '@/components/app-header';
 import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Palette, Spacing } from '@/constants/theme';
 
 const forestItems = [
   {
@@ -54,7 +54,7 @@ function CollectionCard({ item }: { item: (typeof forestItems)[number] }) {
     return (
       <View style={styles.lockedCard}>
         <View style={styles.lockCenter}>
-          <SymbolView name={{ ios: 'lock.fill', android: 'lock', web: 'lock' }} tintColor="#81887F" size={21} />
+          <SymbolView name={{ ios: 'lock.fill', android: 'lock', web: 'lock' }} tintColor={Palette.mutedLight} size={21} />
           <ThemedText style={styles.lockText}>{item.meta[language]}</ThemedText>
         </View>
       </View>
@@ -128,7 +128,7 @@ export default function ForestScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FBFCF8',
+    backgroundColor: Palette.paper,
     flex: 1,
   },
   safeArea: {
@@ -145,39 +145,42 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   heroCopy: {
-    marginBottom: 22,
+    marginBottom: 24,
   },
   title: {
-    color: '#07170B',
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
     fontSize: 26,
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 34,
   },
   subtitle: {
-    color: '#59635A',
+    color: Palette.inkSoft,
     fontSize: 14,
     fontWeight: '500',
     lineHeight: 21,
     marginTop: 8,
   },
   progressCard: {
-    backgroundColor: '#F0F6EA',
-    borderColor: '#C8DBC1',
-    borderRadius: 8,
+    backgroundColor: Palette.primary,
+    borderColor: Palette.primary,
+    borderRadius: 10,
     borderWidth: 1,
     marginBottom: 36,
     paddingHorizontal: 19,
     paddingVertical: 22,
-    shadowColor: '#A8BBA0',
+    shadowColor: Palette.primaryDeep,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.18,
     shadowRadius: 18,
   },
   progressLabel: {
-    color: '#1B261D',
-    fontSize: 12,
-    fontWeight: '900',
-    marginBottom: 7,
+    color: Palette.goldSoft,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.2,
+    marginBottom: 9,
+    textTransform: 'uppercase',
   },
   progressRow: {
     alignItems: 'center',
@@ -186,18 +189,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   progressText: {
-    color: '#1C2A1F',
+    color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '900',
+    fontWeight: '600',
   },
   progressTrack: {
-    backgroundColor: '#C8CFC4',
+    backgroundColor: 'rgba(255,255,255,0.22)',
     borderRadius: 999,
     height: 6,
     overflow: 'hidden',
   },
   progressFill: {
-    backgroundColor: '#4B6D51',
+    backgroundColor: Palette.gold,
     borderRadius: 999,
     height: '100%',
     width: '64%',
@@ -213,10 +216,10 @@ const styles = StyleSheet.create({
   },
   imagePanel: {
     alignItems: 'center',
-    backgroundColor: '#E7EEE3',
-    borderColor: '#C9D7C3',
+    backgroundColor: Palette.surfaceSoft,
+    borderColor: Palette.line,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 10,
     height: 169,
     justifyContent: 'center',
     marginBottom: 13,
@@ -228,14 +231,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardName: {
-    color: '#08150B',
+    color: Palette.ink,
     fontSize: 14,
-    fontWeight: '900',
+    fontWeight: '600',
     lineHeight: 20,
     marginLeft: 6,
   },
   cardMeta: {
-    color: '#324137',
+    color: Palette.inkSoft,
     fontSize: 11,
     fontWeight: '500',
     lineHeight: 16,
@@ -244,9 +247,9 @@ const styles = StyleSheet.create({
   },
   lockedCard: {
     alignItems: 'center',
-    backgroundColor: '#F4F7F1',
-    borderColor: '#AEBDAA',
-    borderRadius: 8,
+    backgroundColor: Palette.surfaceSoft,
+    borderColor: Palette.mutedLight,
+    borderRadius: 10,
     borderStyle: 'dashed',
     borderWidth: 1.5,
     height: 169,
@@ -258,8 +261,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   lockText: {
-    color: '#7B837B',
-    fontSize: 14,
-    fontWeight: '900',
+    color: Palette.muted,
+    fontSize: 13,
+    fontWeight: '600',
   },
 });

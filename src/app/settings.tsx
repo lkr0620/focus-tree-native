@@ -8,7 +8,7 @@ import { AppHeader } from '@/components/app-header';
 import { useAuth } from '@/components/auth-context';
 import { usePreferences, type AppLanguage } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Palette, Spacing } from '@/constants/theme';
 
 const focusSettings = [
   {
@@ -171,10 +171,10 @@ function Accessory({
 
     return (
       <Switch
-        ios_backgroundColor="#E4E7E1"
+        ios_backgroundColor={Palette.line}
         onValueChange={isDarkMode ? onToggleDarkMode : onToggleDoNotDisturb}
-        thumbColor="#FFFFFF"
-        trackColor={{ false: '#E4E7E1', true: '#C9D8C9' }}
+        thumbColor={Palette.surface}
+        trackColor={{ false: Palette.line, true: Palette.primary }}
         value={isDarkMode ? darkMode : doNotDisturb}
       />
     );
@@ -186,7 +186,7 @@ function Accessory({
     <View style={styles.accessoryRow}>
       {displayValue ? <ThemedText style={styles.valueText}>{displayValue}</ThemedText> : null}
       {item.accessory === 'chevron' ? (
-        <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor="#B5BDB3" size={20} />
+        <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor={Palette.mutedLight} size={20} />
       ) : null}
     </View>
   );
@@ -213,7 +213,7 @@ function SettingRow({
 }) {
   return (
     <Pressable onPress={() => onItemPress(item)} style={({ pressed }) => [styles.settingRow, isLast && styles.lastRow, pressed && styles.pressed]}>
-      <SymbolView name={item.icon} tintColor="#4B6D51" size={22} />
+      <SymbolView name={item.icon} tintColor={Palette.primary} size={22} />
       <ThemedText style={styles.settingTitle}>{valueOverrides[`${item.id}:title`] ?? item.title}</ThemedText>
       <Accessory
         darkMode={darkMode}
@@ -387,14 +387,14 @@ export default function SettingsScreen() {
               <View style={styles.avatarWrap}>
                 <View style={styles.avatar} />
                 <View style={styles.avatarLeaf}>
-                  <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor="#FFFFFF" size={15} />
+                  <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor={Palette.goldSoft} size={14} />
                 </View>
               </View>
               <View style={styles.profileCopy}>
                 <ThemedText style={styles.profileName}>{user ? `${user.name}${language === 'ko' ? '님' : ''}` : text.profileDefaultName}</ThemedText>
                 <ThemedText style={styles.profileLevel}>{user ? user.email : text.profileDefaultLevel}</ThemedText>
               </View>
-              <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor="#B5BDB3" size={22} />
+              <SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor={Palette.mutedLight} size={22} />
             </Pressable>
 
             <View style={styles.statusCard}>
@@ -453,7 +453,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FBFCF8',
+    backgroundColor: Palette.paper,
     flex: 1,
   },
   safeArea: {
@@ -471,17 +471,17 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D6E2D1',
-    borderRadius: 8,
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     flexDirection: 'row',
     marginBottom: 36,
     minHeight: 94,
     paddingHorizontal: 22,
-    shadowColor: '#A9BBA4',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.06,
     shadowRadius: 22,
   },
   avatarWrap: {
@@ -491,10 +491,10 @@ const styles = StyleSheet.create({
     width: 56,
   },
   avatar: {
-    backgroundColor: '#142817',
+    backgroundColor: Palette.primary,
     borderRadius: 28,
     height: 56,
-    shadowColor: '#496149',
+    shadowColor: Palette.primaryDeep,
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.28,
     shadowRadius: 12,
@@ -502,8 +502,8 @@ const styles = StyleSheet.create({
   },
   avatarLeaf: {
     alignItems: 'center',
-    backgroundColor: '#4B6D51',
-    borderColor: '#FFFFFF',
+    backgroundColor: Palette.gold,
+    borderColor: Palette.surface,
     borderRadius: 11,
     borderWidth: 2,
     bottom: -2,
@@ -517,31 +517,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileName: {
-    color: '#0B180E',
+    color: Palette.ink,
     fontSize: 15,
-    fontWeight: '900',
+    fontWeight: '700',
     lineHeight: 21,
   },
   profileLevel: {
-    color: '#253327',
+    color: Palette.inkSoft,
     fontSize: 13,
     fontWeight: '500',
     lineHeight: 18,
     marginTop: 2,
   },
   statusCard: {
-    backgroundColor: '#EAF3E6',
-    borderColor: '#C5D9BF',
-    borderRadius: 8,
+    backgroundColor: Palette.primaryTint,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     marginBottom: 28,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   statusText: {
-    color: '#4B6D51',
+    color: Palette.primary,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '600',
     lineHeight: 19,
     textAlign: 'center',
   },
@@ -549,22 +549,24 @@ const styles = StyleSheet.create({
     marginBottom: 36,
   },
   sectionTitle: {
-    color: '#4B6D51',
-    fontSize: 13,
-    fontWeight: '900',
+    color: Palette.inkSoft,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1,
     marginBottom: 12,
     marginLeft: 6,
+    textTransform: 'uppercase',
   },
   sectionCard: {
-    backgroundColor: '#F0F5EC',
-    borderColor: '#D1DEC9',
-    borderRadius: 8,
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     paddingHorizontal: 20,
   },
   settingRow: {
     alignItems: 'center',
-    borderBottomColor: '#DDE6D8',
+    borderBottomColor: Palette.line,
     borderBottomWidth: 1,
     flexDirection: 'row',
     minHeight: 60,
@@ -573,10 +575,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   settingTitle: {
-    color: '#0B180E',
+    color: Palette.ink,
     flex: 1,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     marginLeft: 14,
   },
   accessoryRow: {
@@ -585,7 +587,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   valueText: {
-    color: '#7C877C',
+    color: Palette.muted,
     fontSize: 12,
     fontWeight: '600',
   },
@@ -596,15 +598,15 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   logoutText: {
-    color: '#1B281D',
+    color: Palette.ink,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   footerText: {
-    color: '#D0D4CE',
+    color: Palette.mutedLight,
     fontSize: 10,
-    fontWeight: '900',
-    letterSpacing: 1.4,
+    fontWeight: '700',
+    letterSpacing: 1.6,
     marginBottom: 10,
     marginTop: 8,
     textAlign: 'center',

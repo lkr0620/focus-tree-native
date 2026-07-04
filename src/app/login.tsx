@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/components/auth-context';
 import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Palette, Spacing } from '@/constants/theme';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -57,17 +57,17 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.logoRow}>
-            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor="#4B6D51" size={22} />
+            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.gold} size={20} />
             <ThemedText style={styles.logoText}>Soom</ThemedText>
           </View>
           <Pressable accessibilityRole="button" onPress={() => router.back()} style={({ pressed }) => [styles.closeButton, pressed && styles.pressed]}>
-            <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor="#243126" size={21} />
+            <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor={Palette.ink} size={20} />
           </Pressable>
         </View>
 
         <View style={styles.content}>
           <View style={styles.heroMark}>
-            <SymbolView name={{ ios: 'person.fill', android: 'person', web: 'person' }} tintColor="#FFFFFF" size={34} />
+            <SymbolView name={{ ios: 'person.fill', android: 'person', web: 'person' }} tintColor={Palette.goldSoft} size={32} />
           </View>
 
           <View style={styles.copy}>
@@ -86,7 +86,7 @@ export default function LoginScreen() {
                   setErrorMessage('');
                 }}
                 placeholder="soom@example.com"
-                placeholderTextColor="#9BA49A"
+                placeholderTextColor={Palette.mutedLight}
                 style={styles.input}
                 value={email}
               />
@@ -100,7 +100,7 @@ export default function LoginScreen() {
                   setErrorMessage('');
                 }}
                 placeholder={text.passwordPlaceholder}
-                placeholderTextColor="#9BA49A"
+                placeholderTextColor={Palette.mutedLight}
                 secureTextEntry
                 style={styles.input}
                 value={password}
@@ -113,8 +113,8 @@ export default function LoginScreen() {
               <ThemedText style={styles.loginText}>{text.login}</ThemedText>
             </Pressable>
 
-            <Pressable accessibilityRole="button" style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}>
-              <SymbolView name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }} tintColor="#4B6D51" size={18} />
+            <Pressable accessibilityRole="button" onPress={handleLogin} style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}>
+              <SymbolView name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }} tintColor={Palette.primary} size={18} />
               <ThemedText style={styles.secondaryText}>{text.create}</ThemedText>
             </Pressable>
           </View>
@@ -128,7 +128,7 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#FBFCF8',
+    backgroundColor: Palette.paper,
     flex: 1,
   },
   safeArea: {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: '#ECEFE8',
+    borderBottomColor: Palette.line,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -147,12 +147,14 @@ const styles = StyleSheet.create({
   logoRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: 7,
   },
   logoText: {
-    color: '#4B6D51',
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
     fontSize: 18,
-    fontWeight: '900',
+    fontWeight: '600',
+    letterSpacing: 0.4,
   },
   closeButton: {
     alignItems: 'center',
@@ -173,76 +175,79 @@ const styles = StyleSheet.create({
   heroMark: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#4B6D51',
+    backgroundColor: Palette.primary,
     borderRadius: 38,
     height: 76,
     justifyContent: 'center',
     marginBottom: 26,
-    shadowColor: '#36523B',
+    shadowColor: Palette.primaryDeep,
     shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.24,
     shadowRadius: 18,
     width: 76,
   },
   copy: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 32,
   },
   title: {
-    color: '#101A12',
-    fontSize: 25,
-    fontWeight: '900',
-    lineHeight: 34,
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 27,
+    fontWeight: '600',
+    lineHeight: 35,
     textAlign: 'center',
   },
   subtitle: {
-    color: '#657066',
+    color: Palette.inkSoft,
     fontSize: 14,
     fontWeight: '500',
     lineHeight: 21,
-    marginTop: 8,
+    marginTop: 10,
     textAlign: 'center',
   },
   formCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D6E2D1',
-    borderRadius: 8,
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
+    borderRadius: 10,
     borderWidth: 1,
     padding: 22,
-    shadowColor: '#A9BBA4',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.06,
     shadowRadius: 24,
   },
   inputGroup: {
     marginBottom: 16,
   },
   inputLabel: {
-    color: '#4B6D51',
-    fontSize: 13,
-    fontWeight: '900',
+    color: Palette.inkSoft,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.4,
     marginBottom: 8,
+    textTransform: 'uppercase',
   },
   input: {
-    backgroundColor: '#F0F5EC',
-    borderColor: '#D1DEC9',
+    backgroundColor: Palette.paper,
+    borderColor: Palette.line,
     borderWidth: 1,
     borderRadius: 8,
-    color: '#101A12',
+    color: Palette.ink,
     fontSize: 15,
     minHeight: 52,
     paddingHorizontal: 16,
   },
   loginButton: {
     alignItems: 'center',
-    backgroundColor: '#7A5B4B',
+    backgroundColor: Palette.primary,
     borderRadius: 999,
     justifyContent: 'center',
     marginTop: 8,
     minHeight: 52,
   },
   errorText: {
-    color: '#A14E3F',
+    color: Palette.danger,
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 18,
@@ -250,9 +255,10 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   loginText: {
-    color: '#FFFFFF',
+    color: Palette.goldSoft,
     fontSize: 15,
-    fontWeight: '900',
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   secondaryButton: {
     alignItems: 'center',
@@ -262,14 +268,15 @@ const styles = StyleSheet.create({
     minHeight: 48,
   },
   secondaryText: {
-    color: '#4B6D51',
+    color: Palette.primary,
     fontSize: 14,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   footerText: {
-    color: '#8D968C',
+    color: Palette.mutedLight,
     fontSize: 12,
-    fontWeight: '600',
+    fontStyle: 'italic',
+    fontWeight: '500',
     lineHeight: 18,
     marginTop: 24,
     textAlign: 'center',

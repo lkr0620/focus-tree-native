@@ -4,6 +4,8 @@ import { SymbolView } from 'expo-symbols';
 import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Palette } from '@/constants/theme';
+
 import { useAuth } from './auth-context';
 import { usePreferences } from './preferences-context';
 import { ThemedText } from './themed-text';
@@ -80,7 +82,7 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
               onPress={onPress}
               style={styles.tabSlot}>
               <View style={[styles.tabButton, focused && styles.activeTabButton]}>
-                <SymbolView name={tab.icon} tintColor={focused ? '#FFFFFF' : '#747B73'} size={22} />
+                <SymbolView name={tab.icon} tintColor={focused ? Palette.goldSoft : Palette.mutedLight} size={22} />
                 <ThemedText numberOfLines={1} style={[styles.tabLabel, focused && styles.activeTabLabel]}>
                   {tab.label[language]}
                 </ThemedText>
@@ -110,8 +112,8 @@ export default function AppTabs() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D7E2D3',
+    backgroundColor: Palette.surface,
+    borderColor: Palette.line,
     borderRadius: 28,
     borderWidth: 1,
     bottom: 12,
@@ -120,9 +122,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     position: 'absolute',
     right: 14,
-    shadowColor: '#7C8D76',
+    shadowColor: Palette.shadow,
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.14,
     shadowRadius: 24,
   },
   tabRow: {
@@ -147,19 +149,20 @@ const styles = StyleSheet.create({
     width: 82,
   },
   activeTabButton: {
-    backgroundColor: '#8A5F45',
-    shadowColor: '#8A5F45',
+    backgroundColor: Palette.bark,
+    shadowColor: Palette.barkDeep,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.24,
     shadowRadius: 14,
   },
   tabLabel: {
-    color: '#5D685B',
+    color: Palette.mutedLight,
     fontSize: 11,
-    fontWeight: '900',
+    fontWeight: '700',
+    letterSpacing: 0.2,
     lineHeight: 14,
   },
   activeTabLabel: {
-    color: '#FFFFFF',
+    color: Palette.goldSoft,
   },
 });

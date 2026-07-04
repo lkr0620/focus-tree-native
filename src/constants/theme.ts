@@ -24,6 +24,33 @@ export const Colors = {
   },
 } as const;
 
+/**
+ * Shared visual identity for the app: a muted, editorial "quiet luxury"
+ * palette (deep pine, warm ivory, brass accent) used across screens in
+ * place of one-off hex values.
+ */
+export const Palette = {
+  ink: '#171B18',
+  inkSoft: '#4B5147',
+  muted: '#8C9086',
+  mutedLight: '#AEB2A7',
+  paper: '#F6F3EA',
+  surface: '#FFFFFF',
+  surfaceSoft: '#EFEDE2',
+  line: '#E6E1D2',
+  lineSoft: '#EEEADD',
+  primary: '#1F3D2E',
+  primaryDeep: '#122318',
+  primaryTint: '#E6EBE3',
+  gold: '#AD8A50',
+  goldDeep: '#8C6F3D',
+  goldSoft: '#F1E7D2',
+  bark: '#5C4636',
+  barkDeep: '#3B2C21',
+  danger: '#A14E3F',
+  shadow: '#171B18',
+} as const;
+
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({

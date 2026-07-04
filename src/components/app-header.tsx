@@ -3,7 +3,7 @@ import { SymbolView } from 'expo-symbols';
 import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { Fonts, Palette, Spacing } from '@/constants/theme';
 
 import { useAuth } from './auth-context';
 import { ThemedText } from './themed-text';
@@ -24,7 +24,7 @@ export function AppHeader({
   title,
   leftMode = 'brand',
   rightIcon = { ios: 'person.circle', android: 'account_circle', web: 'account_circle' },
-  rightIconColor = '#1F2A21',
+  rightIconColor = Palette.ink,
   rightIconSize = 22,
   onRightPress,
   rightButtonTone = 'plain',
@@ -37,11 +37,11 @@ export function AppHeader({
       <View style={styles.sideSlot}>
         {leftMode === 'brand' ? (
           <View style={styles.logoRow}>
-            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor="#4B6D51" size={21} />
+            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.gold} size={19} />
             <ThemedText style={styles.logoText}>Soom</ThemedText>
           </View>
         ) : (
-          <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor="#4B6D51" size={24} />
+          <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.primary} size={24} />
         )}
       </View>
       {title ? <ThemedText style={styles.title}>{title}</ThemedText> : null}
@@ -58,8 +58,8 @@ export function AppHeader({
 const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderBottomColor: '#DDE6DA',
+    backgroundColor: Palette.paper,
+    borderBottomColor: Palette.line,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -72,13 +72,14 @@ const styles = StyleSheet.create({
   logoRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: 7,
   },
   logoText: {
-    color: '#2F6840',
-    fontSize: 18,
-    fontWeight: '900',
-    letterSpacing: 0.2,
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 19,
+    fontWeight: '600',
+    letterSpacing: 0.4,
   },
   sideSlot: {
     alignItems: 'flex-start',
@@ -86,10 +87,12 @@ const styles = StyleSheet.create({
     minWidth: 82,
   },
   title: {
-    color: '#4B6D51',
-    fontSize: 21,
-    fontWeight: '900',
+    color: Palette.ink,
+    fontFamily: Fonts?.serif,
+    fontSize: 20,
+    fontWeight: '600',
     left: 0,
+    letterSpacing: 0.2,
     lineHeight: 28,
     position: 'absolute',
     right: 0,
@@ -97,14 +100,14 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     alignItems: 'center',
-    backgroundColor: '#EAF2E8',
+    backgroundColor: Palette.primaryTint,
     borderRadius: 19,
     height: 38,
     justifyContent: 'center',
     width: 38,
   },
   softIconButton: {
-    backgroundColor: '#E9DED3',
+    backgroundColor: Palette.goldSoft,
   },
   pressed: {
     opacity: 0.82,
