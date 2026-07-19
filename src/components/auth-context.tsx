@@ -1,13 +1,23 @@
-import { createContext, useContext, useMemo, useState, type PropsWithChildren } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 type User = {
   email: string;
   name: string;
 };
 
+type AuthResult = {
+  error?: string;
+  needsEmailConfirmation?: boolean;
+  success: boolean;
+};
+
 type AuthContextValue = {
-  login: (email: string, password: string) => boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<AuthResult>;
   logout: () => void;
+  signUp: (email: string, password: string, nickname?: string) => Promise<AuthResult>;
   user: User | null;
 };
 
@@ -18,28 +28,63 @@ function getNameFromEmail(email: string) {
   return name ? name.trim() : '숨 쉬는 나';
 }
 
+function toUser(session: { user: { email?: string; user_metadata?: { nickname?: string } } } | null | undefined): User | null {
+  const email = session?.user.email;
+  if (!email) {
+    return null;
+  }
+
+  const nickname = session?.user.user_metadata?.nickname;
+  return { email, name: nickname && nickname.trim() ? nickname.trim() : getNameFromEmail(email) };
+}
+
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(toUser(data.session));
+      setIsLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(toUser(session));
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      login: (email, password) => {
-        const normalizedEmail = email.trim().toLowerCase();
+      isLoading,
+      login: async (email, password) => {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
 
-        if (!normalizedEmail.includes('@') || password.trim().length < 1) {
-          return false;
+        return error ? { error: error.message, success: false } : { success: true };
+      },
+      logout: () => {
+        supabase.auth.signOut();
+      },
+      signUp: async (email, password, nickname) => {
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim().toLowerCase(),
+          password,
+          options: nickname?.trim() ? { data: { nickname: nickname.trim() } } : undefined,
+        });
+
+        if (error) {
+          return { error: error.message, success: false };
         }
 
-        setUser({
-          email: normalizedEmail,
-          name: getNameFromEmail(normalizedEmail),
-        });
-        return true;
+        return { needsEmailConfirmation: !data.session, success: true };
       },
-      logout: () => setUser(null),
       user,
     }),
-    [user]
+    [isLoading, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

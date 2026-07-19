@@ -1,80 +1,55 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import '@/global.css';
 
 import { Platform } from 'react-native';
 
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
-} as const;
-
 /**
- * Shared visual identity for the app: a muted, editorial "quiet luxury"
- * palette (deep pine, warm ivory, brass accent) used across screens in
- * place of one-off hex values.
+ * Shared visual identity for the app: the "새싹 다이어리" (Sprout Diary) digital-detox
+ * palette — warm cream paper, soft sage green, honey-gold accent, muted clay for
+ * withered/negative states. Ported 1:1 from the approved design (`--bg`, `--text`, etc.)
+ * plus a few derived tones (inkSoft, mutedLight, surfaceSoft, primaryTint) that the
+ * design computed ad hoc per-component but this app reuses as shared tokens.
  */
 export const Palette = {
-  ink: '#171B18',
-  inkSoft: '#4B5147',
-  muted: '#8C9086',
-  mutedLight: '#AEB2A7',
-  paper: '#F6F3EA',
+  // Core tokens, named to match the source design's CSS variables 1:1.
+  bg: '#FBF7EF',
   surface: '#FFFFFF',
-  surfaceSoft: '#EFEDE2',
-  line: '#E6E1D2',
-  lineSoft: '#EEEADD',
-  primary: '#1F3D2E',
-  primaryDeep: '#122318',
-  primaryTint: '#E6EBE3',
-  gold: '#AD8A50',
-  goldDeep: '#8C6F3D',
-  goldSoft: '#F1E7D2',
-  bark: '#5C4636',
-  barkDeep: '#3B2C21',
-  danger: '#A14E3F',
-  shadow: '#171B18',
+  text: '#4A3B2C',
+  textSoft: '#9A8A78',
+  primary: '#7BAE7F',
+  primaryDark: '#5F8F63',
+  accent: '#D8A657',
+  brown: '#8C6E54',
+  wither: '#B7715C',
+  ring: '#EFE6D6',
+
+  // Structural aliases used throughout the screens.
+  paper: '#FBF7EF',
+  ink: '#4A3B2C',
+  inkSoft: '#6B5A46',
+  muted: '#9A8A78',
+  mutedLight: '#B9AB94',
+  line: '#EFE6D6',
+  surfaceSoft: '#F5EFE1',
+  primaryTint: '#E7F1E4',
+  danger: '#C4573F',
+  shadow: '#4A3B2C',
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
-
+// `display` (headings) uses Jua, a rounded hand-drawn Korean display face; `sans` (body) uses
+// Gowun Dodum, a soft humanist Korean sans — both loaded via Google Fonts on web (see +html.tsx).
+// Native platforms fall back to the system default since the actual font files aren't bundled.
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
+    display: 'system-ui',
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
   },
   default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+    display: 'sans-serif',
+    sans: 'sans-serif',
   },
   web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
+    display: 'var(--font-display)',
+    sans: 'var(--font-body)',
   },
 });
 
@@ -89,4 +64,3 @@ export const Spacing = {
 } as const;
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;

@@ -1,54 +1,129 @@
 import { router } from 'expo-router';
-import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/components/auth-context';
+import { SproutIcon } from '@/components/detox-icons';
 import { usePreferences } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Palette, Spacing } from '@/constants/theme';
 
+const ERROR_TRANSLATIONS: Record<string, { en: string; ko: string }> = {
+  'Invalid login credentials': {
+    en: 'Incorrect email or password.',
+    ko: '이메일 또는 비밀번호가 올바르지 않습니다.',
+  },
+  'User already registered': {
+    en: 'An account with this email already exists.',
+    ko: '이미 가입된 이메일입니다.',
+  },
+};
+
+const copy = {
+  ko: {
+    brand: '새싹 다이어리',
+    checkEmail: '가입 확인 메일을 보냈어요. 메일함을 확인한 뒤 로그인해주세요.',
+    confirmPassword: '비밀번호 확인',
+    email: '이메일',
+    error: '필수 항목을 모두 입력해주세요.',
+    footer: '가입만 해도 마음이 편안해져요',
+    login: '로그인',
+    loginCta: '로그인',
+    mismatch: '비밀번호가 일치하지 않습니다.',
+    nickname: '닉네임',
+    password: '비밀번호',
+    signup: '회원가입',
+    signupCta: '회원가입하고 시작하기',
+    subtitle: '오늘도 나만의 시간을 심어볼까요?',
+  },
+  en: {
+    brand: 'Sprout Diary',
+    checkEmail: 'Almost there! Check your inbox to confirm your account, then log in.',
+    confirmPassword: 'Confirm Password',
+    email: 'Email',
+    error: 'Please fill in every field.',
+    footer: 'Just signing up brings a little peace of mind',
+    login: 'Log In',
+    loginCta: 'Log In',
+    mismatch: 'Passwords do not match.',
+    nickname: 'Nickname',
+    password: 'Password',
+    signup: 'Sign Up',
+    signupCta: 'Sign up and get started',
+    subtitle: 'Shall we plant some time for yourself today?',
+  },
+} as const;
+
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, signUp } = useAuth();
   const { language } = usePreferences();
+  const [loginMode, setLoginMode] = useState<'login' | 'signup'>('login');
+  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const text = {
-    en: {
-      create: 'Create Account',
-      email: 'Email',
-      error: 'Please enter your email and password.',
-      footer: "Carry today's small pause into tomorrow's forest.",
-      login: 'Log In',
-      password: 'Password',
-      passwordPlaceholder: 'Enter your password',
-      subtitle: 'Log in to keep growing your forest and records.',
-      title: 'Return to Your Breath',
-    },
-    ko: {
-      create: '계정 만들기',
-      email: '이메일',
-      error: '이메일과 비밀번호를 입력해주세요.',
-      footer: '오늘의 작은 멈춤을 내일의 숲으로 이어가요.',
-      login: '로그인',
-      password: '비밀번호',
-      passwordPlaceholder: '비밀번호를 입력하세요',
-      subtitle: '나의 숲과 기록을 이어가려면 로그인해주세요.',
-      title: '다시 숨으로 돌아오기',
-    },
-  }[language];
+  const [noticeMessage, setNoticeMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const text = copy[language];
 
-  const handleLogin = () => {
-    const didLogin = login(email, password);
+  const describeError = (message: string) => ERROR_TRANSLATIONS[message]?.[language] ?? message;
+  const clearMessages = () => {
+    setErrorMessage('');
+    setNoticeMessage('');
+  };
 
-    if (!didLogin) {
+  const handleSubmit = async () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    if (loginMode === 'login') {
+      if (!email.trim() || !password.trim()) {
+        setErrorMessage(text.error);
+        return;
+      }
+
+      clearMessages();
+      setIsSubmitting(true);
+      const result = await login(email, password);
+      setIsSubmitting(false);
+
+      if (!result.success) {
+        setErrorMessage(result.error ? describeError(result.error) : text.error);
+        return;
+      }
+
+      router.replace('/');
+      return;
+    }
+
+    if (!nickname.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setErrorMessage(text.error);
       return;
     }
 
-    setErrorMessage('');
+    if (password !== confirmPassword) {
+      setErrorMessage(text.mismatch);
+      return;
+    }
+
+    clearMessages();
+    setIsSubmitting(true);
+    const result = await signUp(email, password, nickname);
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setErrorMessage(result.error ? describeError(result.error) : text.error);
+      return;
+    }
+
+    if (result.needsEmailConfirmation) {
+      setNoticeMessage(text.checkEmail);
+      return;
+    }
+
     router.replace('/');
   };
 
@@ -57,68 +132,104 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <View style={styles.logoRow}>
-            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.gold} size={20} />
-            <ThemedText style={styles.logoText}>Soom</ThemedText>
+            <SproutIcon variant="sm" />
+            <ThemedText style={styles.logoText}>{text.brand}</ThemedText>
           </View>
           <Pressable accessibilityRole="button" onPress={() => router.back()} style={({ pressed }) => [styles.closeButton, pressed && styles.pressed]}>
-            <SymbolView name={{ ios: 'xmark', android: 'close', web: 'close' }} tintColor={Palette.ink} size={20} />
+            <ThemedText style={styles.closeText}>✕</ThemedText>
           </Pressable>
         </View>
 
         <View style={styles.content}>
-          <View style={styles.heroMark}>
-            <SymbolView name={{ ios: 'person.fill', android: 'person', web: 'person' }} tintColor={Palette.goldSoft} size={32} />
-          </View>
-
-          <View style={styles.copy}>
-            <ThemedText style={styles.title}>{text.title}</ThemedText>
+          <View style={styles.hero}>
+            <SproutIcon variant="lg" animated />
+            <ThemedText style={styles.brandTitle}>{text.brand}</ThemedText>
             <ThemedText style={styles.subtitle}>{text.subtitle}</ThemedText>
           </View>
 
-          <View style={styles.formCard}>
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.inputLabel}>{text.email}</ThemedText>
-              <TextInput
-                autoCapitalize="none"
-                keyboardType="email-address"
-                onChangeText={text => {
-                  setEmail(text);
-                  setErrorMessage('');
-                }}
-                placeholder="soom@example.com"
-                placeholderTextColor={Palette.mutedLight}
-                style={styles.input}
-                value={email}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.inputLabel}>{text.password}</ThemedText>
-              <TextInput
-                onChangeText={text => {
-                  setPassword(text);
-                  setErrorMessage('');
-                }}
-                placeholder={text.passwordPlaceholder}
-                placeholderTextColor={Palette.mutedLight}
-                secureTextEntry
-                style={styles.input}
-                value={password}
-              />
-            </View>
-
-            {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
-
-            <Pressable accessibilityRole="button" onPress={handleLogin} style={({ pressed }) => [styles.loginButton, pressed && styles.pressed]}>
-              <ThemedText style={styles.loginText}>{text.login}</ThemedText>
+          <View style={styles.tabRow}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                setLoginMode('login');
+                clearMessages();
+              }}
+              style={[styles.tabButton, loginMode === 'login' && styles.tabButtonActive]}>
+              <ThemedText style={[styles.tabText, loginMode === 'login' && styles.tabTextActive]}>{text.login}</ThemedText>
             </Pressable>
-
-            <Pressable accessibilityRole="button" onPress={handleLogin} style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}>
-              <SymbolView name={{ ios: 'person.badge.plus', android: 'person_add', web: 'person_add' }} tintColor={Palette.primary} size={18} />
-              <ThemedText style={styles.secondaryText}>{text.create}</ThemedText>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                setLoginMode('signup');
+                clearMessages();
+              }}
+              style={[styles.tabButton, loginMode === 'signup' && styles.tabButtonActive]}>
+              <ThemedText style={[styles.tabText, loginMode === 'signup' && styles.tabTextActive]}>{text.signup}</ThemedText>
             </Pressable>
           </View>
 
+          <View style={styles.inputGroup}>
+            {loginMode === 'signup' ? (
+              <TextInput
+                autoCapitalize="none"
+                onChangeText={value => {
+                  setNickname(value);
+                  clearMessages();
+                }}
+                placeholder={text.nickname}
+                placeholderTextColor={Palette.mutedLight}
+                style={styles.input}
+                value={nickname}
+              />
+            ) : null}
+            <TextInput
+              autoCapitalize="none"
+              keyboardType="email-address"
+              onChangeText={value => {
+                setEmail(value);
+                clearMessages();
+              }}
+              placeholder={text.email}
+              placeholderTextColor={Palette.mutedLight}
+              style={styles.input}
+              value={email}
+            />
+            <TextInput
+              onChangeText={value => {
+                setPassword(value);
+                clearMessages();
+              }}
+              placeholder={text.password}
+              placeholderTextColor={Palette.mutedLight}
+              secureTextEntry
+              style={styles.input}
+              value={password}
+            />
+            {loginMode === 'signup' ? (
+              <TextInput
+                onChangeText={value => {
+                  setConfirmPassword(value);
+                  clearMessages();
+                }}
+                placeholder={text.confirmPassword}
+                placeholderTextColor={Palette.mutedLight}
+                secureTextEntry
+                style={styles.input}
+                value={confirmPassword}
+              />
+            ) : null}
+          </View>
+
+          {errorMessage ? <ThemedText style={styles.errorText}>{errorMessage}</ThemedText> : null}
+          {noticeMessage ? <ThemedText style={styles.noticeText}>{noticeMessage}</ThemedText> : null}
+
+          <Pressable
+            accessibilityRole="button"
+            disabled={isSubmitting}
+            onPress={handleSubmit}
+            style={({ pressed }) => [styles.ctaButton, (pressed || isSubmitting) && styles.pressed]}>
+            <ThemedText style={styles.ctaText}>{loginMode === 'signup' ? text.signupCta : text.loginCta}</ThemedText>
+          </Pressable>
           <ThemedText style={styles.footerText}>{text.footer}</ThemedText>
         </View>
       </SafeAreaView>
@@ -128,7 +239,7 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Palette.paper,
+    backgroundColor: Palette.bg,
     flex: 1,
   },
   safeArea: {
@@ -136,149 +247,139 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: Palette.line,
+    borderBottomColor: Palette.ring,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 18,
+    paddingBottom: 14,
     paddingHorizontal: Spacing.three,
-    paddingTop: 14,
+    paddingTop: 12,
   },
   logoRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 7,
+    gap: 8,
   },
   logoText: {
-    color: Palette.ink,
-    fontFamily: Fonts?.serif,
-    fontSize: 18,
-    fontWeight: '600',
-    letterSpacing: 0.4,
+    color: Palette.textSoft,
+    fontFamily: Fonts?.display,
+    fontSize: 13,
   },
   closeButton: {
     alignItems: 'center',
-    borderRadius: 19,
-    height: 38,
+    height: 30,
     justifyContent: 'center',
-    width: 38,
+    width: 30,
+  },
+  closeText: {
+    color: Palette.textSoft,
+    fontSize: 16,
   },
   content: {
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     maxWidth: 430,
-    paddingBottom: 42,
-    paddingHorizontal: Spacing.three,
+    paddingHorizontal: 28,
+    paddingTop: 8,
     width: '100%',
   },
-  heroMark: {
+  hero: {
     alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: Palette.primary,
-    borderRadius: 38,
-    height: 76,
+    flex: 1,
     justifyContent: 'center',
-    marginBottom: 26,
-    shadowColor: Palette.primaryDeep,
-    shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.24,
-    shadowRadius: 18,
-    width: 76,
+    gap: 8,
+    paddingBottom: 20,
   },
-  copy: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  title: {
-    color: Palette.ink,
-    fontFamily: Fonts?.serif,
-    fontSize: 27,
-    fontWeight: '600',
-    lineHeight: 35,
-    textAlign: 'center',
+  brandTitle: {
+    color: Palette.text,
+    fontFamily: Fonts?.display,
+    fontSize: 26,
+    marginTop: 4,
   },
   subtitle: {
-    color: Palette.inkSoft,
+    color: Palette.textSoft,
     fontSize: 14,
-    fontWeight: '500',
-    lineHeight: 21,
-    marginTop: 10,
+    lineHeight: 20,
     textAlign: 'center',
   },
-  formCard: {
-    backgroundColor: Palette.surface,
-    borderColor: Palette.line,
+  tabRow: {
+    backgroundColor: Palette.ring,
+    borderRadius: 14,
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 18,
+    padding: 4,
+  },
+  tabButton: {
+    alignItems: 'center',
     borderRadius: 10,
-    borderWidth: 1,
-    padding: 22,
+    flex: 1,
+    paddingVertical: 10,
+  },
+  tabButtonActive: {
+    backgroundColor: Palette.surface,
     shadowColor: Palette.shadow,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.06,
-    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+  },
+  tabText: {
+    color: Palette.textSoft,
+    fontFamily: Fonts?.display,
+    fontSize: 13.5,
+  },
+  tabTextActive: {
+    color: Palette.text,
   },
   inputGroup: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    color: Palette.inkSoft,
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.4,
-    marginBottom: 8,
-    textTransform: 'uppercase',
+    gap: 12,
   },
   input: {
-    backgroundColor: Palette.paper,
-    borderColor: Palette.line,
+    backgroundColor: '#FCFAF5',
+    borderColor: Palette.ring,
+    borderRadius: 14,
     borderWidth: 1,
-    borderRadius: 8,
-    color: Palette.ink,
-    fontSize: 15,
-    minHeight: 52,
+    color: Palette.text,
+    fontSize: 14,
+    minHeight: 48,
     paddingHorizontal: 16,
-  },
-  loginButton: {
-    alignItems: 'center',
-    backgroundColor: Palette.primary,
-    borderRadius: 999,
-    justifyContent: 'center',
-    marginTop: 8,
-    minHeight: 52,
   },
   errorText: {
     color: Palette.danger,
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 18,
-    marginBottom: 10,
-    marginTop: -2,
+    marginTop: 10,
   },
-  loginText: {
-    color: Palette.goldSoft,
-    fontSize: 15,
+  noticeText: {
+    color: Palette.primaryDark,
+    fontSize: 12,
     fontWeight: '700',
-    letterSpacing: 0.3,
+    lineHeight: 18,
+    marginTop: 10,
   },
-  secondaryButton: {
+  ctaButton: {
     alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
+    backgroundColor: Palette.primary,
+    borderRadius: 16,
     justifyContent: 'center',
-    minHeight: 48,
+    marginTop: 20,
+    minHeight: 52,
+    shadowColor: 'rgba(123,174,127,0.3)',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 18,
   },
-  secondaryText: {
-    color: Palette.primary,
-    fontSize: 14,
-    fontWeight: '700',
+  ctaText: {
+    color: '#FFFFFF',
+    fontFamily: Fonts?.display,
+    fontSize: 16,
   },
   footerText: {
-    color: Palette.mutedLight,
+    color: Palette.textSoft,
     fontSize: 12,
-    fontStyle: 'italic',
-    fontWeight: '500',
-    lineHeight: 18,
-    marginTop: 24,
+    marginBottom: 16,
+    marginTop: 14,
     textAlign: 'center',
   },
   pressed: {

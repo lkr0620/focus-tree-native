@@ -1,56 +1,95 @@
 import { router } from 'expo-router';
-import { SymbolView } from 'expo-symbols';
-import type { ComponentProps } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Fonts, Palette, Spacing } from '@/constants/theme';
 
 import { useAuth } from './auth-context';
+import { SproutIcon } from './detox-icons';
+import { usePreferences } from './preferences-context';
 import { ThemedText } from './themed-text';
 
-type SymbolName = ComponentProps<typeof SymbolView>['name'];
-
 type AppHeaderProps = {
-  title?: string;
-  leftMode?: 'brand' | 'leaf';
-  rightIcon?: SymbolName;
-  rightIconColor?: string;
-  rightIconSize?: number;
-  onRightPress?: () => void;
-  rightButtonTone?: 'plain' | 'soft';
+  right?: ReactNode;
 };
 
-export function AppHeader({
-  title,
-  leftMode = 'brand',
-  rightIcon = { ios: 'person.circle', android: 'account_circle', web: 'account_circle' },
-  rightIconColor = Palette.ink,
-  rightIconSize = 22,
-  onRightPress,
-  rightButtonTone = 'plain',
-}: AppHeaderProps) {
-  const { user } = useAuth();
-  const handleRightPress = onRightPress ?? (() => router.push(user ? '/settings' : '/login'));
-
+export function AppHeader({ right }: AppHeaderProps) {
   return (
     <View style={styles.header}>
-      <View style={styles.sideSlot}>
-        {leftMode === 'brand' ? (
-          <View style={styles.logoRow}>
-            <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.gold} size={19} />
-            <ThemedText style={styles.logoText}>Soom</ThemedText>
-          </View>
-        ) : (
-          <SymbolView name={{ ios: 'leaf', android: 'eco', web: 'eco' }} tintColor={Palette.primary} size={24} />
-        )}
+      <View style={styles.logoRow}>
+        <SproutIcon variant="sm" />
+        <ThemedText style={styles.logoText}>새싹 다이어리</ThemedText>
       </View>
-      {title ? <ThemedText style={styles.title}>{title}</ThemedText> : null}
+      {right}
+    </View>
+  );
+}
+
+// Back-arrow + title row used by the seed/goal flow screens, which sit "inside" a step (not a
+// tab), so they need their own back affordance beneath the shared brand row.
+export function BackHeaderRow({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack: () => void }) {
+  return (
+    <View style={styles.backWrap}>
+      <View style={styles.backRow}>
+        <Pressable accessibilityRole="button" onPress={onBack} style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+          <ThemedText style={styles.backArrow}>←</ThemedText>
+        </Pressable>
+        <ThemedText style={styles.backTitle}>{title}</ThemedText>
+      </View>
+      {subtitle ? <ThemedText style={styles.backSubtitle}>{subtitle}</ThemedText> : null}
+    </View>
+  );
+}
+
+const menuCopy = {
+  ko: { greeting: '오늘도 애써주셔서 고마워요', logout: '로그아웃', settings: '설정' },
+  en: { greeting: 'Thanks for showing up today', logout: 'Log Out', settings: 'Settings' },
+} as const;
+
+export function AvatarMenu() {
+  const { logout, user } = useAuth();
+  const { language } = usePreferences();
+  const [open, setOpen] = useState(false);
+  const text = menuCopy[language];
+
+  return (
+    <View>
       <Pressable
         accessibilityRole="button"
-        onPress={handleRightPress}
-        style={({ pressed }) => [styles.iconButton, rightButtonTone === 'soft' && styles.softIconButton, pressed && styles.pressed]}>
-        <SymbolView name={rightIcon} tintColor={rightIconColor} size={rightIconSize} />
+        onPress={() => setOpen(current => !current)}
+        style={({ pressed }) => [styles.avatarButton, pressed && styles.pressed]}>
+        <View style={styles.avatarHead} />
+        <View style={styles.avatarBody} />
       </Pressable>
+
+      {open ? (
+        <View style={styles.menu}>
+          <ThemedText style={styles.menuEmail}>{user?.email ?? 'detox@example.com'}</ThemedText>
+          <ThemedText style={styles.menuGreeting}>{text.greeting}</ThemedText>
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              setOpen(false);
+              router.push('/settings');
+            }}
+            style={({ pressed }) => [styles.menuButton, pressed && styles.pressed]}>
+            <ThemedText style={styles.menuButtonText}>{text.settings}</ThemedText>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              setOpen(false);
+              logout();
+              router.replace('/login');
+            }}
+            style={({ pressed }) => [styles.menuButton, styles.logoutButton, pressed && styles.pressed]}>
+            <ThemedText style={styles.menuButtonText}>{text.logout}</ThemedText>
+          </Pressable>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -58,56 +97,129 @@ export function AppHeader({
 const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
-    backgroundColor: Palette.paper,
-    borderBottomColor: Palette.line,
-    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 26,
-    paddingBottom: 16,
+    marginBottom: 14,
+    paddingBottom: 14,
     paddingHorizontal: Spacing.three,
-    paddingTop: 12,
-    width: '100%',
+    paddingTop: 14,
+    borderBottomColor: Palette.ring,
+    borderBottomWidth: 1,
+    // Elevated above the scrollable content below it, which is otherwise a later sibling in the
+    // same flex container and would paint over the avatar dropdown despite the dropdown's own
+    // zIndex (that only wins against sibling elements within this header, not across it).
+    zIndex: 10,
   },
   logoRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 7,
+    gap: 8,
   },
   logoText: {
-    color: Palette.ink,
-    fontFamily: Fonts?.serif,
-    fontSize: 19,
-    fontWeight: '600',
-    letterSpacing: 0.4,
+    color: Palette.textSoft,
+    fontFamily: Fonts?.display,
+    fontSize: 13,
   },
-  sideSlot: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    minWidth: 82,
+  avatarButton: {
+    backgroundColor: Palette.ring,
+    borderRadius: 17,
+    flexShrink: 0,
+    height: 34,
+    overflow: 'hidden',
+    position: 'relative',
+    width: 34,
   },
-  title: {
-    color: Palette.ink,
-    fontFamily: Fonts?.serif,
-    fontSize: 20,
-    fontWeight: '600',
-    left: 0,
-    letterSpacing: 0.2,
-    lineHeight: 28,
+  avatarHead: {
+    backgroundColor: Palette.primaryDark,
+    borderRadius: 6,
+    height: 12,
+    left: '50%',
+    marginLeft: -6,
     position: 'absolute',
-    right: 0,
+    top: 8,
+    width: 12,
+  },
+  avatarBody: {
+    backgroundColor: Palette.primaryDark,
+    borderTopLeftRadius: 11,
+    borderTopRightRadius: 11,
+    bottom: -6,
+    height: 16,
+    left: '50%',
+    marginLeft: -11,
+    position: 'absolute',
+    width: 22,
+  },
+  menu: {
+    backgroundColor: Palette.surface,
+    borderRadius: 16,
+    gap: 4,
+    padding: 16,
+    position: 'absolute',
+    right: Spacing.three,
+    shadowColor: Palette.shadow,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.14,
+    shadowRadius: 24,
+    top: 44,
+    width: 200,
+    zIndex: 20,
+  },
+  menuEmail: {
+    color: Palette.text,
+    fontSize: 12.5,
+    fontWeight: '600',
+  },
+  menuGreeting: {
+    color: Palette.textSoft,
+    fontSize: 11,
+    marginBottom: 6,
+  },
+  menuButton: {
+    backgroundColor: Palette.ring,
+    borderRadius: 10,
+    marginTop: 6,
+    paddingVertical: 9,
+  },
+  logoutButton: {
+    backgroundColor: Palette.surfaceSoft,
+  },
+  menuButtonText: {
+    color: Palette.text,
+    fontFamily: Fonts?.display,
+    fontSize: 12.5,
     textAlign: 'center',
   },
-  iconButton: {
-    alignItems: 'center',
-    backgroundColor: Palette.primaryTint,
-    borderRadius: 19,
-    height: 38,
-    justifyContent: 'center',
-    width: 38,
+  backWrap: {
+    paddingHorizontal: Spacing.three,
   },
-  softIconButton: {
-    backgroundColor: Palette.goldSoft,
+  backRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  backButton: {
+    alignItems: 'center',
+    backgroundColor: Palette.surface,
+    borderRadius: 17,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
+  backArrow: {
+    color: Palette.text,
+    fontSize: 16,
+  },
+  backTitle: {
+    color: Palette.text,
+    fontFamily: Fonts?.display,
+    fontSize: 19,
+  },
+  backSubtitle: {
+    color: Palette.textSoft,
+    fontSize: 13,
+    marginLeft: 44,
+    marginTop: 6,
   },
   pressed: {
     opacity: 0.82,

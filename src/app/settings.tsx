@@ -8,7 +8,7 @@ import { AppHeader } from '@/components/app-header';
 import { useAuth } from '@/components/auth-context';
 import { usePreferences, type AppLanguage } from '@/components/preferences-context';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Fonts, Palette, Spacing } from '@/constants/theme';
+import { BottomTabInset, Palette, Spacing } from '@/constants/theme';
 
 const focusSettings = [
   {
@@ -83,8 +83,8 @@ const copy = {
     appLimit: '앱 제한 관리',
     appLimitChanged: '앱 제한 범위가 {value}으로 변경되었습니다.',
     appSettings: '앱 설정',
-    about: '숨(Soom) 정보',
-    aboutMessage: 'Soom은 잠깐의 멈춤과 집중 기록을 돕는 호흡 루틴 앱입니다.',
+    about: '새싹 다이어리 정보',
+    aboutMessage: '새싹 다이어리는 폰 사용을 줄일수록 나무가 자라는 디지털 디톡스 앱입니다.',
     dailyGoal: '일일 목표 설정',
     dailyGoalChanged: '일일 목표가 {value}으로 변경되었습니다.',
     darkMode: '다크 모드',
@@ -116,8 +116,8 @@ const copy = {
     appLimit: 'App Limits',
     appLimitChanged: 'App limit scope changed to {value}.',
     appSettings: 'App Settings',
-    about: 'About Soom',
-    aboutMessage: 'Soom helps you build breathing routines through short pauses and focus records.',
+    about: 'About Sprout Diary',
+    aboutMessage: 'Sprout Diary is a digital-detox app where your tree grows the less you use your phone.',
     dailyGoal: 'Daily Goal',
     dailyGoalChanged: 'Daily goal changed to {value}.',
     darkMode: 'Dark Mode',
@@ -370,9 +370,9 @@ export default function SettingsScreen() {
   return (
     <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <AppHeader />
+        <AppHeader />
 
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             <Pressable
               onPress={() => {
@@ -387,7 +387,7 @@ export default function SettingsScreen() {
               <View style={styles.avatarWrap}>
                 <View style={styles.avatar} />
                 <View style={styles.avatarLeaf}>
-                  <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor={Palette.goldSoft} size={14} />
+                  <SymbolView name={{ ios: 'leaf.fill', android: 'eco', web: 'eco' }} tintColor="#FFFFFF" size={14} />
                 </View>
               </View>
               <View style={styles.profileCopy}>
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     backgroundColor: Palette.primary,
     borderRadius: 28,
     height: 56,
-    shadowColor: Palette.primaryDeep,
+    shadowColor: Palette.primaryDark,
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.28,
     shadowRadius: 12,
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
   },
   avatarLeaf: {
     alignItems: 'center',
-    backgroundColor: Palette.gold,
+    backgroundColor: Palette.accent,
     borderColor: Palette.surface,
     borderRadius: 11,
     borderWidth: 2,
