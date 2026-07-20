@@ -41,11 +41,11 @@
     "typescript": "~5.9.2"
   },
   "scripts": {
-    "start": "expo start --port 0",
+    "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android --port 0",
-    "ios": "expo start --ios --port 0",
-    "web": "expo start --web --port 0",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web --port 19006",
     "lint": "expo lint"
   },
   "private": true

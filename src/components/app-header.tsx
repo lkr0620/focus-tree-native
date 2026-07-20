@@ -17,10 +17,13 @@ type AppHeaderProps = {
 export function AppHeader({ right }: AppHeaderProps) {
   return (
     <View style={styles.header}>
-      <View style={styles.logoRow}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/')}
+        style={({ pressed }) => [styles.logoRow, pressed && styles.pressed]}>
         <SproutIcon variant="sm" />
         <ThemedText style={styles.logoText}>새싹 다이어리</ThemedText>
-      </View>
+      </Pressable>
       {right}
     </View>
   );
